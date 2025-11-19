@@ -41,6 +41,7 @@ export async function handleStream(api, req, res, type, id) {
 
             const link = urls[lang][qual];
 
+            // Přidání URL pro oba streamy (SD a HD)
             const streams = [
                 {
                     title: `${lang} ${qual}`,
@@ -86,6 +87,7 @@ export async function handleStream(api, req, res, type, id) {
 
             const link = urls[lang][qual];
 
+            // Přidání URL pro oba streamy (SD a HD)
             const streams = [
                 {
                     title: `${lang} ${qual}`,
@@ -103,3 +105,4 @@ export async function handleStream(api, req, res, type, id) {
         sendError(res, 500, "Stream error: " + e.message);
     }
 }
+

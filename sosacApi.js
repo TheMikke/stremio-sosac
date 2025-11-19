@@ -122,22 +122,34 @@ export default class SosacApi {
         // Získáme odpověď z API
         const response = await this.getJson(url);
 
-        // Pokud je odpověď správná, vybereme kvalitní verzi (HD nebo SD)
+        // Pokud je odpověď správná, vrátíme JSON s URL pro různé kvality
         if (response.result === 1 && response.URL) {
-            // Pokud chceme HD verzi, můžeme to nastavit podle potřeby
-            const videoUrl = response.URL.CZ.HD || response.URL.CZ.SD;
+            const hdUrl = response.URL.CZ.HD;
+            const sdUrl = response.URL.CZ.SD;
 
-            if (videoUrl) {
-                console.log("Streamovací odkaz pro přehrání:", videoUrl); // Debug log
-                return videoUrl; // Vracení správného odkazu
-            } else {
-                throw new Error("StreamujTV: Žádný dostupný stream.");
+            const streams = [];
+            if (hdUrl) {
+                streams.push({
+                    title: "HD",
+                    url: hdUrl,
+                    isFree: true
+                });
             }
+            if (sdUrl) {
+                streams.push({
+                    title: "SD",
+                    url: sdUrl,
+                    isFree: true
+                });
+            }
+
+            return { streams };
         } else {
             throw new Error("StreamujTV: Chyba při získávání streamu.");
-            }
         }
     }
+}
+
 
     // ------------------- MOVIES ------------------------
 
