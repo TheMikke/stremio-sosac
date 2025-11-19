@@ -14,12 +14,12 @@ export const sosacConfig = {
     streaming_provider: "www.streamuj.tv",
 
     // Přihlášení na Sosáč
-    sosac_user: "TVUJ_LOGIN_NA_SOSAC",
-    sosac_pass: "TVOJE_HESLO_NA_SOSAC",
+    sosac_user: "Mikke14",
+    sosac_pass: "Bo5kananse",
 
     // Přihlášení na Streamuj.TV (pokud nemáš, nech prázdné)
-    streamujtv_user: "TVUJ_LOGIN_NA_STREAMUJTV",
-    streamujtv_pass: "TVOJE_HESLO_NA_STREAMUJTV",
+    streamujtv_user: "Mikke14",
+    streamujtv_pass: "Bo5kananse",
 
     // v Kodi to byl index, tady prostě "0" nebo "1"
     streamujtv_location: "0"
