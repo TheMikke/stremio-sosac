@@ -1,6 +1,6 @@
 {
   "id": "com.sosac.stremio",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "name": "Sosáč + StreamujTV (Raspberry)",
   "description": "Neoficiální Stremio doplněk umožňující přístup k filmům a seriálům z API Sosáče a StreamujTV. Běží na tvém Raspberry Pi přes Tailscale Funnel.",
 
