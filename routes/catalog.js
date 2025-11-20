@@ -2,6 +2,9 @@
 
 import { sendJson, sendError, getTitleCs } from "./utils.js";
 
+// kolik bereme z API Sosáče na jednu "stránku"
+const PAGE_SIZE = 100;
+
 // Pomocné mapování Sosáč -> Stremio meta (FILMY)
 function mapMovieToMeta(item) {
     const title = getTitleCs(item.n);
@@ -46,7 +49,26 @@ function mapSeriesToMeta(item) {
 export async function handleCatalog(api, req, res, type, id, query) {
     try {
         let metas = [];
+
         const search = query.search || null;
+
+        // Stremio posílá stránkování přes "skip"
+        const skipRaw = query.skip || "0";
+        const skip = Number.isNaN(parseInt(skipRaw, 10))
+            ? 0
+            : parseInt(skipRaw, 10);
+
+        const page = Math.floor(skip / PAGE_SIZE) + 1;
+        const pageStr = String(page);
+
+        console.log(
+            "Catalog request:",
+            "type:", type,
+            "id:", id,
+            "search:", search,
+            "skip:", skip,
+            "page:", pageStr
+        );
 
         // ----------------------------------------------------
         // FILMY – hlavní katalog (populární + vyhledávání)
@@ -54,12 +76,17 @@ export async function handleCatalog(api, req, res, type, id, query) {
         if (type === "movie" && id === "sosac-movies") {
             let data;
 
-            if (search) {
+            if (search && search.trim() !== "") {
                 // vyhledávání podle názvu
-                data = await api.movies("search", { arg2: search, arg3: "1" });
+                data = await api.movies("search", {
+                    arg2: search,
+                    arg3: pageStr
+                });
             } else {
                 // výchozí – populární filmy
-                data = await api.movies("popular", { arg3: "1" });
+                data = await api.movies("popular", {
+                    arg3: pageStr
+                });
             }
 
             metas = (Array.isArray(data) ? data : []).map(mapMovieToMeta);
@@ -67,28 +94,33 @@ export async function handleCatalog(api, req, res, type, id, query) {
 
         // ----------------------------------------------------
         // FILMY – A-Z
-        // query.search = písmeno (volitelné), jinak vše
+        // query.search = písmeno (volitelné), jinak default 'a'
         // ----------------------------------------------------
         else if (type === "movie" && id === "sosac-movies-az") {
-            const letter =
-                search && search.length > 0
-                    ? search[0].toLowerCase()
-                    : "";
-            const data = await api.movies("a-z", { arg2: letter, arg3: "1" });
+            let letter = "a";
+
+            if (search && search.trim().length > 0) {
+                letter = search.trim()[0].toLowerCase();
+            }
+
+            const data = await api.movies("a-z", {
+                arg2: letter,
+                arg3: pageStr
+            });
 
             metas = (Array.isArray(data) ? data : []).map(mapMovieToMeta);
         }
 
         // ----------------------------------------------------
         // FILMY – podle žánru
-        // TODO: žánr můžeš časem udělat dynamicky (extra param),
+        // žánr můžeš časem udělat dynamicky (extra param),
         // zatím fixně "akční"
         // ----------------------------------------------------
         else if (type === "movie" && id === "sosac-movies-genre") {
-            const genre = "akční";
+            const genre = query.genre || "akční"; // můžeš si přepsat / posílat z manifestu extra
             const data = await api.movies("by-genre", {
                 arg2: genre,
-                arg3: "1"
+                arg3: pageStr
             });
 
             metas = (Array.isArray(data) ? data : []).map(mapMovieToMeta);
@@ -100,15 +132,17 @@ export async function handleCatalog(api, req, res, type, id, query) {
         else if (type === "series" && id === "sosac-series") {
             let data;
 
-            if (search) {
+            if (search && search.trim() !== "") {
                 data = await api.serials("search", {
                     arg2: search,
                     arg3: "",
-                    arg5: "1"
+                    arg5: pageStr
                 });
             } else {
                 // výchozí – populární seriály
-                data = await api.serials("popular", { arg5: "1" });
+                data = await api.serials("popular", {
+                    arg5: pageStr
+                });
             }
 
             metas = (Array.isArray(data) ? data : []).map(mapSeriesToMeta);
@@ -118,13 +152,15 @@ export async function handleCatalog(api, req, res, type, id, query) {
         // SERIÁLY – A-Z
         // ----------------------------------------------------
         else if (type === "series" && id === "sosac-series-az") {
-            const letter =
-                search && search.length > 0
-                    ? search[0].toLowerCase()
-                    : "";
+            let letter = "a";
+
+            if (search && search.trim().length > 0) {
+                letter = search.trim()[0].toLowerCase();
+            }
+
             const data = await api.serials("a-z", {
                 arg2: letter,
-                arg5: "1"
+                arg5: pageStr
             });
 
             metas = (Array.isArray(data) ? data : []).map(mapSeriesToMeta);
@@ -134,10 +170,10 @@ export async function handleCatalog(api, req, res, type, id, query) {
         // SERIÁLY – podle žánru
         // ----------------------------------------------------
         else if (type === "series" && id === "sosac-series-genre") {
-            const genre = "drama";
+            const genre = query.genre || "drama";
             const data = await api.serials("by-genre", {
                 arg2: genre,
-                arg5: "1"
+                arg5: pageStr
             });
 
             metas = (Array.isArray(data) ? data : []).map(mapSeriesToMeta);
