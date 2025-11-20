@@ -1,6 +1,6 @@
 // routes/catalog.js
 
-import { sendJson, sendError, getTitleCs, getTitleEn } from "./utils.js";
+import { sendJson, sendError, getTitleCs } from "./utils.js";
 
 // dl (sekundy) -> minuty
 function secsToMinutes(dl) {
@@ -15,17 +15,19 @@ function toArray(val) {
     return Array.isArray(val) ? val : [val];
 }
 
-function normalizeDirectors(h) {
-    if (!h) return [];
-    if (Array.isArray(h)) return h.map(String);
-    return [String(h)];
+// jen anglický název (us / en), fallback na cs
+function getTitleEn(n) {
+    if (!n) return "";
+    if (typeof n === "string") return n;
+
+    if (n.us) return Array.isArray(n.us) ? n.us[0] : n.us;
+    if (n.en) return Array.isArray(n.en) ? n.en[0] : n.en;
+    if (n.cs) return Array.isArray(n.cs) ? n.cs[0] : n.cs;
+
+    return "";
 }
 
-function normalizeCast(f) {
-    if (!f) return [];
-    if (Array.isArray(f)) return f.map(String);
-    return [String(f)];
-}
+// ---------- mapování položek na MetaPreview pro FILM ----------
 
 function mapMovieItemToMetaPreview(item) {
     const title = getTitleEn(item.n);
@@ -56,11 +58,8 @@ function mapMovieItemToMetaPreview(item) {
     const imdbRating =
         csfdRating != null ? (csfdRating / 10).toFixed(1) : undefined;
 
-    // releaseInfo – jen rok (jak chceš)
+    // releaseInfo – pouze rok
     const releaseInfo = year ? String(year) : "";
-
-    const directors = normalizeDirectors(item.h);
-    const cast = normalizeCast(item.f);
 
     return {
         id: `sosac-movie-${mid}`,
@@ -76,15 +75,12 @@ function mapMovieItemToMetaPreview(item) {
         language,
         runtime,
         releaseInfo,
-
-        // Stremio použije jako rating v náhledu (číslo vedle hvězdičky)
-        imdbRating, // string, ale je to ČSFD/10
-
-        // režiséři / herci – Stremio si je může vytáhnout v detailu
-        director: directors,
-        cast
+        imdbRating // string (ČSFD/10), pro UI rating
+        // director ani cast zde neposíláme, mobilní klient je nemusí znát
     };
 }
+
+// ---------- mapování položek na MetaPreview pro SERIÁL ----------
 
 function mapSeriesItemToMetaPreview(item) {
     const title = getTitleEn(item.n);
@@ -116,9 +112,6 @@ function mapSeriesItemToMetaPreview(item) {
 
     const releaseInfo = year ? String(year) : "";
 
-    const directors = normalizeDirectors(item.h);
-    const cast = normalizeCast(item.f);
-
     return {
         id: `sosac-series-${sid}`,
         type: "series",
@@ -133,14 +126,13 @@ function mapSeriesItemToMetaPreview(item) {
         language,
         runtime,
         releaseInfo,
-        imdbRating,
-
-        director: directors,
-        cast
+        imdbRating
+        // opět žádný director / cast, iOS má katalog MetaPreview striktně typovaný
     };
 }
 
-// /catalog/{type}/{id}.json
+// ---------------- /catalog/{type}/{id}.json ----------------
+
 // extra = { search, skip, ... } – přichází ze server.js
 export async function handleCatalog(api, req, res, type, id, extra = {}) {
     try {
@@ -152,21 +144,19 @@ export async function handleCatalog(api, req, res, type, id, extra = {}) {
         const page = Math.floor(skip / pageSize) + 1;
         const pageStr = String(page);
 
-        // ----------------- FILMY -----------------
+        // -------- FILMY --------
         if (type === "movie" && id === "sosac-movies") {
             let data;
             if (search) {
-                // fulltext vyhledávání v Sosáči
                 data = await api.movies("search", { arg2: search, arg3: pageStr });
             } else {
-                // výchozí – populární filmy
                 data = await api.movies("popular", { arg3: pageStr });
             }
 
             metas = (Array.isArray(data) ? data : []).map(mapMovieItemToMetaPreview);
         }
 
-        // ----------------- SERIÁLY -----------------
+        // -------- SERIÁLY --------
         else if (type === "series" && id === "sosac-series") {
             let data;
             if (search) {
@@ -178,7 +168,7 @@ export async function handleCatalog(api, req, res, type, id, extra = {}) {
             metas = (Array.isArray(data) ? data : []).map(mapSeriesItemToMetaPreview);
         }
 
-        // ostatní katalogy (A-Z, žánry...) – když nejsou implementované
+        // ostatní katalogy (A-Z, žánry...) – aktuálně prázdné
         else {
             metas = [];
         }
