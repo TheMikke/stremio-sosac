@@ -98,60 +98,39 @@ export default class SosacApi {
         }
     }
 
-        async streamujGet(stream) {
-    if (!this.streamujUser || !this.streamujPass)
-        throw new Error("StreamujTV: chybí login nebo heslo.");
+    // ------------------- STREAMUJ TV ------------------------
 
-    const passMd5 = this.md5(this.streamujPass);
-    const loc = this.streamujLocation;
+    async streamujGet(stream) {
+        if (!this.streamujUser || !this.streamujPass)
+            throw new Error("StreamujTV: chybí login nebo heslo.");
 
-    let url;
+        const passMd5 = this.md5(this.streamujPass);
+        const loc = this.streamujLocation;
 
-    if (stream) {
-        // Požadavek na získání streamovacích odkazů (json)
-        url =
-            `${this.STREAMUJ_API}action=get-video-links&d=19&link=${encodeURIComponent(
-                stream
-            )}` +
-            `&login=${encodeURIComponent(this.streamujUser)}` +
-            `&password=${encodeURIComponent(passMd5)}` +
-            `&location=${encodeURIComponent(loc)}`;
+        let url;
 
-        // Získáme odpověď z API
-        const response = await this.getJson(url);
-        console.log("JSON z Streamuj.tv:", response);
-
-        // Pokud odpověď obsahuje URL pro různé kvality
-        if (response.result === 1 && response.URL) {
-            const hdUrl = response.URL.CZ.HD;
-            const sdUrl = response.URL.CZ.SD;
-
-            const streams = [];
-
-            // Necháme dynamický prefix URL, vrátíme je tak, jak je
-            if (hdUrl) {
-                streams.push({
-                    title: "HD",
-                    url: hdUrl,  // Přímý odkaz bez změny prefixu
-                    isFree: true
-                });
-            }
-
-            if (sdUrl) {
-                streams.push({
-                    title: "SD",
-                    url: sdUrl,  // Přímý odkaz bez změny prefixu
-                    isFree: true
-                });
-            }
-
-            return { streams };
+        if (stream) {
+            // získání odkazů na video
+            url =
+                `${this.STREAMUJ_API}action=get-video-links&d=19&link=${encodeURIComponent(
+                    stream
+                )}` +
+                `&login=${encodeURIComponent(this.streamujUser)}` +
+                `&password=${encodeURIComponent(passMd5)}` +
+                `&location=${encodeURIComponent(loc)}`;
         } else {
-            throw new Error("StreamujTV: Chyba při získávání streamu.");
+            // kontrola účtu
+            url =
+                `${this.STREAMUJ_API}action=check-user` +
+                `&login=${encodeURIComponent(this.streamujUser)}` +
+                `&password=${encodeURIComponent(passMd5)}` +
+                `&passwordinmd5=1`;
         }
-    }
-}
 
+        const json = await this.getJson(url);
+        console.log("JSON z Streamuj.tv:", json);
+        return json;
+    }
 
     // ------------------- MOVIES ------------------------
 
