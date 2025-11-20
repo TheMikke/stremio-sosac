@@ -268,7 +268,6 @@ export async function handleMeta(api, req, res, type, id) {
                         season,
                         episode,
                         overview,
-                        released,
                         thumbnail,
                         language: epLanguage,
                         quality: epQuality,
