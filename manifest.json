@@ -2,10 +2,10 @@
   "id": "com.sosac.stremio",
   "version": "1.0.0",
   "name": "Sosáč + StreamujTV (Raspberry)",
-  "description": "Neoficiální Stremio doplněk umožňující přístup k filmům a seriálům z API Sosáče a StreamujTV. Běží na tvém Raspberry Pi jako lokální server.",
+  "description": "Neoficiální Stremio doplněk umožňující přístup k filmům a seriálům z API Sosáče a StreamujTV. Běží na tvém Raspberry Pi přes Tailscale Funnel.",
 
-  "logo": "http://YOUR-RPI-IP:7000/icon.png",
-  "background": "http://YOUR-RPI-IP:7000/fanart.png",
+  "logo": "https://raspberrypi.napoleon-degree.ts.net/icon.png",
+  "background": "https://raspberrypi.napoleon-degree.ts.net/fanart.png",
 
   "contactEmail": "none",
 
@@ -13,12 +13,32 @@
     {
       "type": "movie",
       "id": "sosac-movies",
-      "name": "Sosáč Filmy"
+      "name": "Sosáč – Filmy"
+    },
+    {
+      "type": "movie",
+      "id": "sosac-movies-az",
+      "name": "Sosáč – Filmy A-Z"
+    },
+    {
+      "type": "movie",
+      "id": "sosac-movies-genre",
+      "name": "Sosáč – Filmy podle žánru"
     },
     {
       "type": "series",
       "id": "sosac-series",
-      "name": "Sosáč Seriály"
+      "name": "Sosáč – Seriály"
+    },
+    {
+      "type": "series",
+      "id": "sosac-series-az",
+      "name": "Sosáč – Seriály A-Z"
+    },
+    {
+      "type": "series",
+      "id": "sosac-series-genre",
+      "name": "Sosáč – Seriály podle žánru"
     }
   ],
 
