@@ -74,16 +74,20 @@ export async function handleMeta(api, req, res, type, id) {
             // režisér "s"
             const director = data.s || null;
 
-            // hodnocení:
-            // c  = ČSFD v procentech
-            // m  = IMDb * 10  (81 => 8.1)
-            const csfdRating = typeof data.c === "number" ? data.c : null;
-            const imdbRating =
-                typeof data.m === "number"
-                    ? data.m / 10
-                    : (data.m ? parseInt(data.m, 10) / 10 : null);
+            // ratingy:
+            // c  = ČSFD v procentech (použijeme jako hlavní rating ve Stremiu)
+            // m  = IMDb * 10  (81 => 8.1) – jen bokem
+            const csfdRating = data.c != null ? parseInt(data.c, 10) : null;
+            const imdbRaw =
+                data.m != null ? parseInt(data.m, 10) : null;
+            const imdbAsNumber =
+                imdbRaw != null ? imdbRaw / 10 : null;
 
-            // cp / mp vypadají jako interní id – NEpoužíváme je jako ID na web
+            // Stremio používá meta.imdbRating jako "rating".
+            // Sem dáme přepočtené ČSFD (0–10), a IMDb necháme jen bokem.
+            const rating10 = csfdRating != null
+                ? csfdRating / 10
+                : imdbAsNumber;
 
             // obrázky
             const poster =
@@ -103,8 +107,11 @@ export async function handleMeta(api, req, res, type, id) {
                 description,
                 year,
                 genres,
-                imdbRating,
+                // hlavní rating pro Stremio – z ČSFD
+                imdbRating: rating10,
+                // pro tebe navíc
                 csfdRating,
+                imdbRatingOriginal: imdbAsNumber,
                 country,
                 language,
                 quality,
@@ -113,15 +120,21 @@ export async function handleMeta(api, req, res, type, id) {
                 runtimeStr,   // "1h 23m"
                 added,
                 director,
+                // Stremio zobrazí v náhledu vpravo
                 releaseInfo: [
                     year ? String(year) : null,
                     country,
-                    imdbRating ? `IMDb ${imdbRating.toFixed(1)}` : null,
-                    csfdRating ? `ČSFD ${csfdRating}%` : null,
+                    csfdRating != null
+                        ? `ČSFD ${csfdRating}%`
+                        : (imdbAsNumber != null
+                            ? `IMDb ${imdbAsNumber.toFixed(1)}`
+                            : null),
                     runtimeStr
                 ]
                     .filter(Boolean)
                     .join(" • "),
+                // herce Sosáč v těchhle datech nevrací – necháme prázdné
+                cast: [],
                 videos: []
             };
 
@@ -152,12 +165,14 @@ export async function handleMeta(api, req, res, type, id) {
             const country = countries.join(", ") || null;
 
             // ratingy seriálu
-            const csfdRating =
-                typeof info.c === "number" ? info.c : null;
-            const imdbRating =
-                typeof info.m === "number"
-                    ? info.m / 10
-                    : (info.m ? parseInt(info.m, 10) / 10 : null);
+            const csfdRating = info.c != null ? parseInt(info.c, 10) : null;
+            const imdbRaw =
+                info.m != null ? parseInt(info.m, 10) : null;
+            const imdbAsNumber =
+                imdbRaw != null ? imdbRaw / 10 : null;
+            const rating10 = csfdRating != null
+                ? csfdRating / 10
+                : imdbAsNumber;
 
             // obrázky seriálu
             const poster =
@@ -275,14 +290,21 @@ export async function handleMeta(api, req, res, type, id) {
                 description: seriesDescription,
                 year,
                 genres,
-                imdbRating,
+                imdbRating: rating10,        // hlavní rating pro Stremio = ČSFD
                 csfdRating,
+                imdbRatingOriginal: imdbAsNumber,
                 country,
+                // režiséry / herce Sosáč v serialDetailu typicky detailně nevrací
+                director: info.s || null,
+                cast: [],
                 releaseInfo: [
                     year ? String(year) : null,
                     country,
-                    imdbRating ? `IMDb ${imdbRating.toFixed(1)}` : null,
-                    csfdRating ? `ČSFD ${csfdRating}%` : null
+                    csfdRating != null
+                        ? `ČSFD ${csfdRating}%`
+                        : (imdbAsNumber != null
+                            ? `IMDb ${imdbAsNumber.toFixed(1)}`
+                            : null)
                 ]
                     .filter(Boolean)
                     .join(" • "),
