@@ -1,1 +1,45 @@
+Nov 20 09:00:34 raspberrypi node[33167]: Volání API na URL: https://kodi-api.sosac.to/movies/2240?username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 09:00:34 raspberrypi node[33167]: STREAM movie, sosac ID: 2240
+Nov 20 09:00:34 raspberrypi node[33167]: Volání API na URL: https://kodi-api.sosac.to/movies/2240?username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 09:00:35 raspberrypi node[33167]: Nalezen linkId pro Streamuj.tv: fcd282996385c6d9d1df
+Nov 20 09:00:35 raspberrypi node[33167]: Volání API na URL: https://www.streamuj.tv/json_api_player.php?action=get-video-links&d=19&link=fcd282996385c6d9d1df&login=Mikke14&password=dbe142dd2efff4524db04f85acab6819&location=1
+Nov 20 09:00:35 raspberrypi node[33167]: JSON z Streamuj.tv: {
+Nov 20 09:00:35 raspberrypi node[33167]:   version: '1.0',
+Nov 20 09:00:35 raspberrypi node[33167]:   action: 'get-video-links',
+Nov 20 09:00:35 raspberrypi node[33167]:   timestamp: 1763624646,
+Nov 20 09:00:35 raspberrypi node[33167]:   result: 1,
+Nov 20 09:00:35 raspberrypi node[33167]:   URL: {
+Nov 20 09:00:35 raspberrypi node[33167]:     CZ: {
+Nov 20 09:00:35 raspberrypi node[33167]:       SD: 'https://www.streamuj.tv/video/fcd282996385c6d9d1df?streamuj=original&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
+Nov 20 09:00:35 raspberrypi node[33167]:       HD: 'https://www.streamuj.tv/video/fcd282996385c6d9d1df?streamuj=hd&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3'
+Nov 20 09:00:35 raspberrypi node[33167]:     }
+Nov 20 09:00:35 raspberrypi node[33167]:   },
+Nov 20 09:00:35 raspberrypi node[33167]:   errormessage: 0
+Nov 20 09:00:35 raspberrypi node[33167]: }
+Nov 20 09:00:35 raspberrypi node[33167]: Odpověď ze Streamuj.tv: {
+Nov 20 09:00:35 raspberrypi node[33167]:   version: '1.0',
+Nov 20 09:00:35 raspberrypi node[33167]:   action: 'get-video-links',
+Nov 20 09:00:35 raspberrypi node[33167]:   timestamp: 1763624646,
+Nov 20 09:00:35 raspberrypi node[33167]:   result: 1,
+Nov 20 09:00:35 raspberrypi node[33167]:   URL: {
+Nov 20 09:00:35 raspberrypi node[33167]:     CZ: {
+Nov 20 09:00:35 raspberrypi node[33167]:       SD: 'https://www.streamuj.tv/video/fcd282996385c6d9d1df?streamuj=original&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
+Nov 20 09:00:35 raspberrypi node[33167]:       HD: 'https://www.streamuj.tv/video/fcd282996385c6d9d1df?streamuj=hd&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3'
+Nov 20 09:00:35 raspberrypi node[33167]:     }
+Nov 20 09:00:35 raspberrypi node[33167]:   },
+Nov 20 09:00:35 raspberrypi node[33167]:   errormessage: 0
+Nov 20 09:00:35 raspberrypi node[33167]: }
+Nov 20 09:00:35 raspberrypi node[33167]: VRACÍM STREAMY PRO STREMIO: [
+Nov 20 09:00:35 raspberrypi node[33167]:   {
+Nov 20 09:00:35 raspberrypi node[33167]:     title: 'CZ SD',
+Nov 20 09:00:35 raspberrypi node[33167]:     url: 'https://www.streamuj.tv/video/fcd282996385c6d9d1df?streamuj=original&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
+Nov 20 09:00:35 raspberrypi node[33167]:     isFree: true
+Nov 20 09:00:35 raspberrypi node[33167]:   },
+Nov 20 09:00:35 raspberrypi node[33167]:   {
+Nov 20 09:00:35 raspberrypi node[33167]:     title: 'CZ HD',
+Nov 20 09:00:35 raspberrypi node[33167]:     url: 'https://www.streamuj.tv/video/fcd282996385c6d9d1df?streamuj=hd&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
+Nov 20 09:00:35 raspberrypi node[33167]:     isFree: true
+Nov 20 09:00:35 raspberrypi node[33167]:   }
+Nov 20 09:00:35 raspberrypi node[33167]: ]
+
 
