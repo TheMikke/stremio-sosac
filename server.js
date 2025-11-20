@@ -52,12 +52,28 @@ function safeJoin(root, p) {
     return filePath;
 }
 
+// extra string z path -> objekt { search, skip, ... }
+function parseExtra(extraStr) {
+    const extra = {};
+    if (!extraStr) return extra;
+
+    // extraStr vypadá např. "search=matrix&skip=100"
+    const parts = extraStr.split("&");
+    for (const part of parts) {
+        if (!part) continue;
+        const [key, ...rest] = part.split("=");
+        if (!key) continue;
+        const value = rest.join("=");
+        extra[decodeURIComponent(key)] = decodeURIComponent(value || "");
+    }
+    return extra;
+}
+
 // ----------------- SERVER -----------------------------
 
 const server = http.createServer(async (req, res) => {
     const parsed = url.parse(req.url, true);
     const pathname = parsed.pathname || "/";
-    const query = parsed.query || {};
 
     // CORS pro Stremio
     res.setHeader("Access-Control-Allow-Origin", "*");
@@ -93,13 +109,30 @@ const server = http.createServer(async (req, res) => {
         return serveFile(res, filePath);
     }
 
-    const parts = pathname.split("/").filter(Boolean); // ["catalog","movie","sosac-movies.json"]
+    const parts = pathname.split("/").filter(Boolean);
+    // příklady:
+    // /catalog/movie/sosac-movies.json
+    //   -> ["catalog","movie","sosac-movies.json"]
+    // /catalog/movie/sosac-movies/search=matrix&skip=100.json
+    //   -> ["catalog","movie","sosac-movies","search=matrix&skip=100.json"]
 
-    // /catalog/{type}/{id}.json
+    // /catalog/{type}/{id}.json nebo /catalog/{type}/{id}/{extra}.json
     if (parts[0] === "catalog" && parts.length >= 3) {
         const type = parts[1];
-        const id = parts[2].replace(".json", "");
-        return handleCatalog(api, req, res, type, id, query);
+
+        // bez extra: /catalog/:type/:id.json
+        if (parts.length === 3) {
+            const id = parts[2].replace(".json", "");
+            const extra = {};
+            return handleCatalog(api, req, res, type, id, extra);
+        }
+
+        // s extra: /catalog/:type/:id/:extra.json
+        const id = parts[2];
+        const extraPart = parts[3].replace(".json", "");
+        const extra = parseExtra(extraPart);
+
+        return handleCatalog(api, req, res, type, id, extra);
     }
 
     // /meta/{type}/{id}.json
