@@ -19,12 +19,24 @@ async function buildStreamsFromStreamuj(api, streamData, logPrefix = "") {
     // Projdeme všechny jazyky a všechny kvality (nejen SD/HD)
     for (const lang of Object.keys(streamData.URL)) {
         const qualityObj = streamData.URL[lang] || {};
+
         for (const qual of Object.keys(qualityObj)) {
             const playerUrl = qualityObj[qual];
-            if (!playerUrl) continue;
+
+            // subtitles apod. někdy vrací objekt -> přeskočíme
+            if (!playerUrl || typeof playerUrl !== "string") {
+                console.log(
+                    logPrefix,
+                    "Přeskakuji ne-video položku:",
+                    lang,
+                    qual,
+                    typeof playerUrl
+                );
+                continue;
+            }
 
             candidates.push({
-                title: `${lang} ${qual}`, // např. "CZ HD", "CZ FULLHD", ...
+                title: `${lang} ${qual}`, // např. "CZ HD", "EN SD", ...
                 playerUrl
             });
         }
