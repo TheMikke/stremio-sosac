@@ -2,6 +2,62 @@
 
 import { sendJson, sendError, findLinkId } from "./utils.js";
 
+// Pomocná funkce: z odpovědi Streamuj.tv postaví pole streamů pro Stremio
+async function buildStreamsFromStreamuj(api, streamData, logPrefix = "") {
+    if (!streamData || streamData.result !== 1) {
+        console.log(logPrefix, "Streamuj.tv vrátil chybu nebo result != 1");
+        return [];
+    }
+
+    if (!streamData.URL || typeof streamData.URL !== "object") {
+        console.log(logPrefix, "Streamuj.tv nevrátil URL objekt");
+        return [];
+    }
+
+    const candidates = [];
+
+    // Projdeme všechny jazyky a všechny kvality (nejen SD/HD)
+    for (const lang of Object.keys(streamData.URL)) {
+        const qualityObj = streamData.URL[lang] || {};
+        for (const qual of Object.keys(qualityObj)) {
+            const playerUrl = qualityObj[qual];
+            if (!playerUrl) continue;
+
+            candidates.push({
+                title: `${lang} ${qual}`, // např. "CZ HD", "CZ FULLHD", ...
+                playerUrl
+            });
+        }
+    }
+
+    const streams = [];
+
+    // Pro každý "player" odkaz (https://www.streamuj.tv/video/...)
+    // zkusíme najít přímé video URL (mp4/mkv/webm/m3u8)
+    for (const cand of candidates) {
+        const directUrl = await api.resolveStreamujDirectUrl(cand.playerUrl);
+
+        if (!directUrl) {
+            console.log(
+                logPrefix,
+                "Nepodařilo se najít přímé video URL, použiju fallback playerUrl:",
+                cand.playerUrl
+            );
+        } else {
+            console.log(logPrefix, "Používám přímé video URL:", directUrl);
+        }
+
+        streams.push({
+            title: cand.title,
+            url: directUrl || cand.playerUrl, // když selže resolver, aspoň fallback
+            isFree: true
+        });
+    }
+
+    console.log(logPrefix, "VRACÍM STREAMY PRO STREMIO:", streams);
+    return streams;
+}
+
 // /stream/{type}/{id}.json
 export async function handleStream(api, req, res, type, id) {
     try {
@@ -12,6 +68,7 @@ export async function handleStream(api, req, res, type, id) {
 
             // 1) Detail filmu ze Sosáče
             const data = await api.movies("id", { arg2: movieId });
+
             // Najdeme Streamuj.tv ID (linkId)
             const linkId = findLinkId(data);
             console.log("Nalezen linkId pro Streamuj.tv:", linkId);
@@ -25,41 +82,16 @@ export async function handleStream(api, req, res, type, id) {
             const streamData = await api.streamujGet(linkId);
             console.log("Odpověď ze Streamuj.tv:", streamData);
 
-            // Ověření odpovědi
-            if (!streamData || streamData.result !== 1) {
-                console.log("Streamuj.tv vrátil chybu nebo result != 1");
-                return sendJson(res, { streams: [] });
-            }
+            const streams = await buildStreamsFromStreamuj(
+                api,
+                streamData,
+                "[FILM]"
+            );
 
-            if (!streamData.URL || typeof streamData.URL !== "object") {
-                console.log("Streamuj.tv nevrátil URL objekt");
-                return sendJson(res, { streams: [] });
-            }
-
-            const streams = [];
-
-            // Projdeme jazyky (většinou jen CZ)
-            for (const lang of Object.keys(streamData.URL)) {
-                const qualityObj = streamData.URL[lang] || {};
-
-                for (const qual of Object.keys(qualityObj)) {
-                    const link = qualityObj[qual];
-                    if (!link) continue;
-
-                    // Tohle je přesně objekt, jaký Stremio očekává
-                    streams.push({
-                        title: `${lang} ${qual}`, // např. "CZ HD"
-                        url: link,                // http(s) URL, co přehraje Stremio / service
-                        isFree: true
-                    });
-                }
-            }
-
-            console.log("VRACÍM STREAMY PRO STREMIO:", streams);
             return sendJson(res, { streams });
         }
 
-        // ---------- EPIZODY (zjednodušeně) ----------
+        // ---------- EPIZODY ----------
         if (type === "series" && id.startsWith("sosac-episode-")) {
             const epId = id.replace("sosac-episode-", "");
             console.log("STREAM episode, sosac ID:", epId);
@@ -77,26 +109,12 @@ export async function handleStream(api, req, res, type, id) {
             const streamData = await api.streamujGet(linkId);
             console.log("Odpověď ze Streamuj.tv (episode):", streamData);
 
-            if (!streamData || streamData.result !== 1 || !streamData.URL) {
-                return sendJson(res, { streams: [] });
-            }
+            const streams = await buildStreamsFromStreamuj(
+                api,
+                streamData,
+                "[EPIZODA]"
+            );
 
-            const streams = [];
-            for (const lang of Object.keys(streamData.URL)) {
-                const qualityObj = streamData.URL[lang] || {};
-                for (const qual of Object.keys(qualityObj)) {
-                    const link = qualityObj[qual];
-                    if (!link) continue;
-
-                    streams.push({
-                        title: `${lang} ${qual}`,
-                        url: link,
-                        isFree: true
-                    });
-                }
-            }
-
-            console.log("VRACÍM STREAMY PRO STREMIO (episode):", streams);
             return sendJson(res, { streams });
         }
 
