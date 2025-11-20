@@ -4,7 +4,7 @@ import { sendJson, sendError, getTitleCs } from "./utils.js";
 
 const PAGE_SIZE = 100;
 
-// Sosáč -> Stremio meta (film)
+// Sosáč -> Stremio meta (FILM)
 function mapMovieToMeta(item) {
     const title = getTitleCs(item.n);
     const year = item.y || item.year || null;
@@ -24,7 +24,7 @@ function mapMovieToMeta(item) {
     };
 }
 
-// Sosáč -> Stremio meta (seriál)
+// Sosáč -> Stremio meta (SERIÁL)
 function mapSeriesToMeta(item) {
     const title = getTitleCs(item.n);
     const year = item.y || item.year || null;
@@ -45,17 +45,19 @@ function mapSeriesToMeta(item) {
 }
 
 // /catalog/{type}/{id}.json
-export async function handleCatalog(api, req, res, type, id, query) {
+// POZOR: poslední argument bereme jako "extra" z URL (search, skip, ...)
+// server.js by měl volat: handleCatalog(api, req, res, type, id, extra)
+export async function handleCatalog(api, req, res, type, id, extra = {}) {
     try {
         let metas = [];
 
-        const search = query.search || null;
+        // extra.search může přijít jako string z cesty
+        const search = (extra.search || "").toString().trim();
 
-        // stránkování z Stremia (skip = kolik položek přeskočit)
-        const skipRaw = query.skip || "0";
-        const skip = Number.isNaN(parseInt(skipRaw, 10))
-            ? 0
-            : parseInt(skipRaw, 10);
+        // skip může být string, převedeme na číslo
+        const skipRaw = extra.skip || "0";
+        const skipNum = parseInt(skipRaw, 10);
+        const skip = Number.isNaN(skipNum) ? 0 : skipNum;
 
         const page = Math.floor(skip / PAGE_SIZE) + 1;
         const pageStr = String(page);
@@ -64,7 +66,7 @@ export async function handleCatalog(api, req, res, type, id, query) {
             "Catalog request:",
             "type:", type,
             "id:", id,
-            "search:", search,
+            "search:", search || null,
             "skip:", skip,
             "page:", pageStr
         );
@@ -73,10 +75,10 @@ export async function handleCatalog(api, req, res, type, id, query) {
         if (type === "movie" && id === "sosac-movies") {
             let data;
 
-            if (search && search.trim() !== "") {
+            if (search) {
                 // vyhledávání ve filmech
                 data = await api.movies("search", {
-                    arg2: search.trim(),
+                    arg2: search,
                     arg3: pageStr
                 });
             } else {
@@ -93,9 +95,9 @@ export async function handleCatalog(api, req, res, type, id, query) {
         else if (type === "series" && id === "sosac-series") {
             let data;
 
-            if (search && search.trim() !== "") {
+            if (search) {
                 data = await api.serials("search", {
-                    arg2: search.trim(),
+                    arg2: search,
                     arg3: "",
                     arg5: pageStr
                 });
@@ -114,6 +116,8 @@ export async function handleCatalog(api, req, res, type, id, query) {
             metas = [];
         }
 
+        // Když vrátíme pole s položkami, Stremio ho normálně vykreslí.
+        // Když vrátíme prázdné [] a už předtím něco bylo, je to "konec listování".
         sendJson(res, { metas });
     } catch (e) {
         console.error("Catalog error:", e);
