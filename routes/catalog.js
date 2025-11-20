@@ -81,11 +81,11 @@ export async function handleCatalog(api, req, res, type, id, query) {
 
         // ----------------------------------------------------
         // FILMY – podle žánru
-        // pro jednoduchost zatím fixní žánr, můžeš si změnit
-        // např. na "komedie", "akční", "drama", atd.
+        // TODO: žánr můžeš časem udělat dynamicky (extra param),
+        // zatím fixně "akční"
         // ----------------------------------------------------
         else if (type === "movie" && id === "sosac-movies-genre") {
-            const genre = "akční"; // TODO: změň dle chuti
+            const genre = "akční";
             const data = await api.movies("by-genre", {
                 arg2: genre,
                 arg3: "1"
@@ -134,7 +134,7 @@ export async function handleCatalog(api, req, res, type, id, query) {
         // SERIÁLY – podle žánru
         // ----------------------------------------------------
         else if (type === "series" && id === "sosac-series-genre") {
-            const genre = "drama"; // TODO: změň dle chuti
+            const genre = "drama";
             const data = await api.serials("by-genre", {
                 arg2: genre,
                 arg5: "1"
