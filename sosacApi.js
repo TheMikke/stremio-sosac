@@ -98,7 +98,7 @@ export default class SosacApi {
         }
     }
 
-    // ------------------- STREAMUJ TV ------------------------
+        // ------------------- STREAMUJ TV ------------------------
 
     async streamujGet(stream) {
         if (!this.streamujUser || !this.streamujPass)
@@ -131,6 +131,63 @@ export default class SosacApi {
         console.log("JSON z Streamuj.tv:", json);
         return json;
     }
+
+    /*
+     */
+    async resolveStreamujDirectUrl(playerUrl) {
+    if (!playerUrl) return null;
+
+    try {
+        console.log("Stahuji HTML stránku Streamuj.tv:", playerUrl);
+
+        const res = await fetch(playerUrl, {
+            headers: {
+                "User-Agent":
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+                    "AppleWebKit/537.36 (KHTML, like Gecko) " +
+                    "Chrome/131.0.0.0 Safari/537.36",
+                "Referer": "https://www.streamuj.tv/",
+                "Origin": "https://www.streamuj.tv"
+            }
+        });
+
+        if (!res.ok) {
+            console.log("Streamuj.tv stránka chyba:", res.status, res.statusText);
+            return null;
+        }
+
+        const html = await res.text();
+
+        // Najdeme video URL (.mp4, .mkv, .webm nebo .m3u8)
+        const re =
+            /https:\/\/s\d+\.streamuj\.tv[^"' ]+\.(mp4|mkv|webm|m3u8)(\?[^"' ]+)?/i;
+
+        const match = html.match(re);
+
+        if (match && match[0]) {
+            console.log("Nalezeno přímé video URL:", match[0]);
+            return match[0];
+        }
+
+        // Fallback: hledáme strukturu jako 'file: "URL"'
+        const reFile =
+            /file"\s*:\s*"(?<url>https:\/\/s\d+\.streamuj\.tv[^"]+\.(mp4|mkv|webm|m3u8)[^"]*)"/i;
+
+        const m2 = html.match(reFile);
+        if (m2?.groups?.url) {
+            console.log("Nalezeno video z JS objektu:", m2.groups.url);
+            return m2.groups.url;
+        }
+
+        console.log("Nepodařilo se najít žádné video URL.");
+        return null;
+    } catch (err) {
+        console.error("Chyba resolveStreamujDirectUrl:", err);
+        return null;
+    }
+}
+
+
 
     // ------------------- MOVIES ------------------------
 
