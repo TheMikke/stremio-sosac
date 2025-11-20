@@ -261,7 +261,6 @@ export async function handleMeta(api, req, res, type, id) {
 
                     // linkId "l" – používá se ve /stream
                     const linkId = epObj.l || null;
-                    const released = epObj.r || null;
                     
                     videos.push({
                         id: `sosac-episode-${epId}`,
@@ -297,6 +296,7 @@ export async function handleMeta(api, req, res, type, id) {
                 year,
                 genres,
                 releaseInfo,
+                released,
                 imdbRating,
                 country,
                 director: directors,
