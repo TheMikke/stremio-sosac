@@ -275,7 +275,6 @@ export async function handleMeta(api, req, res, type, id) {
                         audio: epAudio,
                         runtime: epRuntime,
                         country: epCountry,
-                        genres: epGenres,
                         year: epObj.y || year,
                         added: released,
                         linkId
@@ -288,19 +287,17 @@ export async function handleMeta(api, req, res, type, id) {
             const meta = {
                 id,
                 type: "series",
-                name: seriesTitle,
+                name,
                 poster,
                 posterShape: "poster",
                 background,
-                description: seriesDescription,
+                description,
                 year,
-                genres,
                 releaseInfo,
                 imdbRating,
                 country,
-                director: directors,
+                director,
                 cast,
-                csfdRating,
                 videos
             };
 
