@@ -1,22 +1,35 @@
-Nov 20 11:05:14 raspberrypi node[33709]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
-Nov 20 11:05:14 raspberrypi node[33709]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 11:05:19 raspberrypi node[33709]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
-Nov 20 11:05:19 raspberrypi node[33709]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 11:05:20 raspberrypi node[33709]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
-Nov 20 11:05:20 raspberrypi node[33709]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 11:05:23 raspberrypi node[33709]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
-Nov 20 11:05:23 raspberrypi node[33709]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 11:05:24 raspberrypi node[33709]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
-Nov 20 11:05:24 raspberrypi node[33709]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 11:05:25 raspberrypi node[33709]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
-Nov 20 11:05:25 raspberrypi node[33709]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 11:05:31 raspberrypi node[33709]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
-Nov 20 11:05:31 raspberrypi node[33709]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 11:05:31 raspberrypi node[33709]: Catalog request: type: series id: sosac-series search: null skip: 0 page: 1
-Nov 20 11:05:31 raspberrypi node[33709]: Volání API na URL: https://kodi-api.sosac.to/serials/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 11:05:53 raspberrypi node[33709]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
-Nov 20 11:05:53 raspberrypi node[33709]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 11:05:57 raspberrypi node[33709]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
-Nov 20 11:05:57 raspberrypi node[33709]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 11:05:57 raspberrypi node[33709]: Catalog request: type: series id: sosac-series search: null skip: 0 page: 1
-Nov 20 11:05:57 raspberrypi node[33709]: Volání API na URL: https://kodi-api.sosac.to/serials/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+ov 20 11:15:36 raspberrypi node[33770]: STREAM episode, sosac ID: 9249
+Nov 20 11:15:36 raspberrypi node[33770]: Volání API na URL: https://kodi-api.sosac.to/episodes/9249?username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 11:15:37 raspberrypi node[33770]: Nalezen linkId pro Streamuj.tv (episode): 0374ddc90062a8ac0d1c
+Nov 20 11:15:37 raspberrypi node[33770]: Volání API na URL: https://www.streamuj.tv/json_api_player.php?action=get-video-links&d=19&link=0374ddc90062a8ac0d1c&login=Mikke14&password=dbe142dd2efff4524db04f85acab6819&location=1
+Nov 20 11:15:37 raspberrypi node[33770]: JSON z Streamuj.tv: {
+Nov 20 11:15:37 raspberrypi node[33770]:   version: '1.0',
+Nov 20 11:15:37 raspberrypi node[33770]:   action: 'get-video-links',
+Nov 20 11:15:37 raspberrypi node[33770]:   timestamp: 1763632747,
+Nov 20 11:15:37 raspberrypi node[33770]:   result: 1,
+Nov 20 11:15:37 raspberrypi node[33770]:   URL: {
+Nov 20 11:15:37 raspberrypi node[33770]:     CZ: {
+Nov 20 11:15:37 raspberrypi node[33770]:       SD: 'https://www.streamuj.tv/video/0374ddc90062a8ac0d1c?streamuj=original&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
+Nov 20 11:15:37 raspberrypi node[33770]:       HD: 'https://www.streamuj.tv/video/0374ddc90062a8ac0d1c?streamuj=hd&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3'
+Nov 20 11:15:37 raspberrypi node[33770]:     }
+Nov 20 11:15:37 raspberrypi node[33770]:   },
+Nov 20 11:15:37 raspberrypi node[33770]:   errormessage: 0
+Nov 20 11:15:37 raspberrypi node[33770]: }
+Nov 20 11:15:37 raspberrypi node[33770]: Odpověď ze Streamuj.tv (episode): {
+Nov 20 11:15:37 raspberrypi node[33770]:   version: '1.0',
+Nov 20 11:15:37 raspberrypi node[33770]:   action: 'get-video-links',
+Nov 20 11:15:37 raspberrypi node[33770]:   timestamp: 1763632747,
+Nov 20 11:15:37 raspberrypi node[33770]:   result: 1,
+Nov 20 11:15:37 raspberrypi node[33770]:   URL: {
+Nov 20 11:15:37 raspberrypi node[33770]:     CZ: {
+Nov 20 11:15:37 raspberrypi node[33770]:       SD: 'https://www.streamuj.tv/video/0374ddc90062a8ac0d1c?streamuj=original&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
+Nov 20 11:15:37 raspberrypi node[33770]:       HD: 'https://www.streamuj.tv/video/0374ddc90062a8ac0d1c?streamuj=hd&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3'
+Nov 20 11:15:37 raspberrypi node[33770]:     }
+Nov 20 11:15:37 raspberrypi node[33770]:   },
+Nov 20 11:15:37 raspberrypi node[33770]:   errormessage: 0
+Nov 20 11:15:37 raspberrypi node[33770]: }
+Nov 20 11:15:37 raspberrypi node[33770]: Stahuji HTML stránku Streamuj.tv: https://www.streamuj.tv/video/0374ddc90062a8ac0d1c?streamuj=original&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 11:15:37 raspberrypi node[33770]: Nalezeno přímé video URL: https://s33.streamuj.tv:443/vid/1c3c38e0adb7e9ac308eb815b70d3044/691ee66b/0374ddc90062a8ac0d1c_sd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 11:15:37 raspberrypi node[33770]: [EPIZODA] Používám přímé video URL: https://s33.streamuj.tv:443/vid/1c3c38e0adb7e9ac308eb815b70d3044/691ee66b/0374ddc90062a8ac0d1c_sd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 11:15:37 raspberrypi node[33770]: Stahuji HTML stránku Streamuj.tv: https://www.streamuj.tv/video/0374ddc90062a8ac0d1c?streamuj=hd&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 11:15:37 raspberrypi node[33770]: Nalezeno přímé video URL: https://s33.streamuj.tv:443/vid/1ae654118d8cda06280945c81069b867/691ee66b/0374ddc90062a8ac0d1c_hd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
