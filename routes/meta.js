@@ -1,4 +1,6 @@
 // routes/meta.js
+// Meta odpověď pro Stremio podle ofiko struktury:
+// https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/meta.md
 
 import { sendJson, sendError, getTitleCs } from "./utils.js";
 
@@ -24,6 +26,20 @@ function toArray(val) {
     return Array.isArray(val) ? val : [val];
 }
 
+// režisér/ři: pole stringů (pole nebo string → pole)
+function normalizeDirectors(h) {
+    if (!h) return [];
+    if (Array.isArray(h)) return h.map(String);
+    return [String(h)];
+}
+
+// cast: "f" může být string nebo pole
+function normalizeCast(f) {
+    if (!f) return [];
+    if (Array.isArray(f)) return f.map(String);
+    return [String(f)];
+}
+
 // ---------------- META HANDLER --------------------
 
 // /meta/{type}/{id}.json
@@ -47,14 +63,14 @@ export async function handleMeta(api, req, res, type, id) {
             const year = data.y || data.year || null;
 
             // žánry "g"
-            const genres = toArray(data.g);
+            const genres = toArray(data.g).map(String);
 
             // země "o"
-            const countries = toArray(data.o);
+            const countries = toArray(data.o).map(String);
             const country = countries.join(", ") || null;
 
             // jazyk videa (dabing) "d"
-            const languages = toArray(data.d);
+            const languages = toArray(data.d).map(String);
             const language = languages.join(", ") || null;
 
             // kvalita streamu "q"
@@ -63,33 +79,32 @@ export async function handleMeta(api, req, res, type, id) {
             // typ zvuku "e"
             const audio = data.e || null;
 
-            // délka "dl" -> min + label
-            const { minutes: runtime, label: runtimeStr } = parseDuration(
-                data.dl
-            );
+            // délka "dl" -> min + label "1h 23m"
+            const { minutes: runtimeMinutes, label: runtimeLabel } =
+                parseDuration(data.dl);
+
+            // runtime, jak chce Stremio – string
+            const runtime = runtimeLabel || (runtimeMinutes != null
+                ? `${runtimeMinutes} min`
+                : null);
 
             // datum přidání "r"
             const added = data.r || null;
 
-            // režisér "s"
-            const director = data.s || null;
+            // režiséři "h"
+            const directors = normalizeDirectors(data.h);
 
-            // ratingy:
-            // c  = ČSFD v procentech (použijeme jako hlavní rating ve Stremiu)
-            // m  = IMDb * 10  (81 => 8.1) – jen bokem
+            // herci "f"
+            const cast = normalizeCast(data.f);
+
+            // rating:
+            // c = ČSFD v procentech → hlavní rating pro Stremio
             const csfdRating = data.c != null ? parseInt(data.c, 10) : null;
-            const imdbRaw =
-                data.m != null ? parseInt(data.m, 10) : null;
-            const imdbAsNumber =
-                imdbRaw != null ? imdbRaw / 10 : null;
+            const rating10 = csfdRating != null ? csfdRating / 10 : null;
+            const imdbRating =
+                rating10 != null ? rating10.toFixed(1) : undefined; // string, např. "8.8"
 
-            // Stremio používá meta.imdbRating jako "rating".
-            // Sem dáme přepočtené ČSFD (0–10), a IMDb necháme jen bokem.
-            const rating10 = csfdRating != null
-                ? csfdRating / 10
-                : imdbAsNumber;
-
-            // obrázky
+            // obrázky: poster + background
             const poster =
                 data.i ||
                 `https://movies.sosac.tv/images/75x109/movie-${movieId}.jpg`;
@@ -97,44 +112,43 @@ export async function handleMeta(api, req, res, type, id) {
                 data.b ||
                 poster;
 
+            // releaseInfo – Stremio ukazuje vedle plakátu
+            const releaseInfoParts = [];
+            if (year) releaseInfoParts.push(String(year));
+            if (country) releaseInfoParts.push(country);
+            if (csfdRating != null)
+                releaseInfoParts.push(`ČSFD ${csfdRating}%`);
+            if (runtimeLabel) releaseInfoParts.push(runtimeLabel);
+            const releaseInfo = releaseInfoParts.join(" • ");
+
             const meta = {
+                // povinné
                 id,
                 type: "movie",
                 name: title,
                 poster,
                 posterShape: "poster",
+
+                // doporučené / volitelné
                 background,
                 description,
                 year,
                 genres,
-                // hlavní rating pro Stremio – z ČSFD
-                imdbRating: rating10,
-                // pro tebe navíc
+                releaseInfo,
+                imdbRating,       // string, ale je to ve skutečnosti ČSFD/10
+                runtime,          // string ("123 min" nebo "1h 23m")
+                language,         // string
+                country,          // string
+                director: directors, // pole stringů
+                cast,             // pole stringů
+
+                // vlastní užitečná pole navíc – Stremio ignoruje
                 csfdRating,
-                imdbRatingOriginal: imdbAsNumber,
-                country,
-                language,
                 quality,
                 audio,
-                runtime,      // minuty
-                runtimeStr,   // "1h 23m"
                 added,
-                director,
-                // Stremio zobrazí v náhledu vpravo
-                releaseInfo: [
-                    year ? String(year) : null,
-                    country,
-                    csfdRating != null
-                        ? `ČSFD ${csfdRating}%`
-                        : (imdbAsNumber != null
-                            ? `IMDb ${imdbAsNumber.toFixed(1)}`
-                            : null),
-                    runtimeStr
-                ]
-                    .filter(Boolean)
-                    .join(" • "),
-                // herce Sosáč v těchhle datech nevrací – necháme prázdné
-                cast: [],
+
+                // filmy nemají epizody
                 videos: []
             };
 
@@ -160,19 +174,22 @@ export async function handleMeta(api, req, res, type, id) {
                 typeof info.p === "string" ? info.p.trim() : "";
 
             const year = info.y || info.year || null;
-            const genres = toArray(info.g);
-            const countries = toArray(info.o);
+            const genres = toArray(info.g).map(String);
+            const countries = toArray(info.o).map(String);
             const country = countries.join(", ") || null;
 
-            // ratingy seriálu
-            const csfdRating = info.c != null ? parseInt(info.c, 10) : null;
-            const imdbRaw =
-                info.m != null ? parseInt(info.m, 10) : null;
-            const imdbAsNumber =
-                imdbRaw != null ? imdbRaw / 10 : null;
-            const rating10 = csfdRating != null
-                ? csfdRating / 10
-                : imdbAsNumber;
+            // režiséři "h"
+            const directors = normalizeDirectors(info.h);
+
+            // herci "f"
+            const cast = normalizeCast(info.f);
+
+            // rating seriálu z ČSFD
+            const csfdRating =
+                info.c != null ? parseInt(info.c, 10) : null;
+            const rating10 = csfdRating != null ? csfdRating / 10 : null;
+            const imdbRating =
+                rating10 != null ? rating10.toFixed(1) : undefined;
 
             // obrázky seriálu
             const poster =
@@ -184,7 +201,7 @@ export async function handleMeta(api, req, res, type, id) {
 
             const videos = [];
 
-            // Sezóny + epizody
+            // Sezóny + epizody (s, ep, p, d, q, dl, o, g, ne/n)
             for (const key of Object.keys(data)) {
                 if (key === "info") continue;
 
@@ -207,7 +224,7 @@ export async function handleMeta(api, req, res, type, id) {
 
                     if (Number.isNaN(season) || Number.isNaN(episode)) continue;
 
-                    // název epizody "ne" (cs/us)
+                    // název epizody "ne" (cs/us) nebo fallback na název seriálu
                     const epTitleName = getTitleCs(
                         epObj.ne || epObj.n || info.n || seriesTitle
                     );
@@ -227,25 +244,30 @@ export async function handleMeta(api, req, res, type, id) {
                     const released = epObj.r || null;
 
                     // jazyk "d"
-                    const epLangs = toArray(epObj.d);
-                    const language = epLangs.join(", ") || null;
+                    const epLangs = toArray(epObj.d).map(String);
+                    const epLanguage = epLangs.join(", ") || null;
 
                     // kvalita "q"
-                    const quality = epObj.q || null;
+                    const epQuality = epObj.q || null;
 
                     // audio "e"
-                    const audio = epObj.e || null;
+                    const epAudio = epObj.e || null;
 
                     // délka "dl"
-                    const { minutes: runtime, label: runtimeStr } =
-                        parseDuration(epObj.dl);
+                    const {
+                        minutes: epRuntimeMinutes,
+                        label: epRuntimeLabel
+                    } = parseDuration(epObj.dl);
+                    const epRuntime = epRuntimeLabel || (epRuntimeMinutes != null
+                        ? `${epRuntimeMinutes} min`
+                        : null);
 
                     // žánry / země pro epizodu (pokud má vlastní, jinak z info)
                     const epGenres = toArray(epObj.g).length
-                        ? toArray(epObj.g)
+                        ? toArray(epObj.g).map(String)
                         : genres;
                     const epCountries = toArray(epObj.o).length
-                        ? toArray(epObj.o)
+                        ? toArray(epObj.o).map(String)
                         : countries;
                     const epCountry = epCountries.join(", ") || null;
 
@@ -266,19 +288,25 @@ export async function handleMeta(api, req, res, type, id) {
                         overview,
                         released,
                         thumbnail,
-                        language,
-                        quality,
-                        audio,
-                        runtime,
-                        runtimeStr,
+                        language: epLanguage,
+                        quality: epQuality,
+                        audio: epAudio,
+                        runtime: epRuntime,
                         country: epCountry,
                         genres: epGenres,
-                        added: released,
                         year: epObj.y || year,
+                        added: released,
                         linkId
                     });
                 }
             }
+
+            const releaseInfoParts = [];
+            if (year) releaseInfoParts.push(String(year));
+            if (country) releaseInfoParts.push(country);
+            if (csfdRating != null)
+                releaseInfoParts.push(`ČSFD ${csfdRating}%`);
+            const releaseInfo = releaseInfoParts.join(" • ");
 
             const meta = {
                 id,
@@ -290,24 +318,12 @@ export async function handleMeta(api, req, res, type, id) {
                 description: seriesDescription,
                 year,
                 genres,
-                imdbRating: rating10,        // hlavní rating pro Stremio = ČSFD
-                csfdRating,
-                imdbRatingOriginal: imdbAsNumber,
+                releaseInfo,
+                imdbRating,
                 country,
-                // režiséry / herce Sosáč v serialDetailu typicky detailně nevrací
-                director: info.s || null,
-                cast: [],
-                releaseInfo: [
-                    year ? String(year) : null,
-                    country,
-                    csfdRating != null
-                        ? `ČSFD ${csfdRating}%`
-                        : (imdbAsNumber != null
-                            ? `IMDb ${imdbAsNumber.toFixed(1)}`
-                            : null)
-                ]
-                    .filter(Boolean)
-                    .join(" • "),
+                director: directors,
+                cast,
+                csfdRating,
                 videos
             };
 
