@@ -1,20 +1,52 @@
 mikke@raspberrypi:~/stremio-sosac $ sudo journalctl -u stremio-sosac -f
-Nov 20 10:14:25 raspberrypi node[33389]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 10:14:25 raspberrypi node[33389]: Volání API na URL: https://kodi-api.sosac.to/serials/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 10:24:23 raspberrypi systemd[1]: Stopping stremio-sosac.service - Stremio Sosac Addon Service...
-Nov 20 10:24:23 raspberrypi systemd[1]: stremio-sosac.service: Deactivated successfully.
-Nov 20 10:24:23 raspberrypi systemd[1]: Stopped stremio-sosac.service - Stremio Sosac Addon Service.
-Nov 20 10:24:23 raspberrypi systemd[1]: stremio-sosac.service: Consumed 3.307s CPU time.
-Nov 20 10:24:23 raspberrypi systemd[1]: Started stremio-sosac.service - Stremio Sosac Addon Service.
-Nov 20 10:24:23 raspberrypi node[33521]: Stremio Sosac addon listening on http://0.0.0.0:2283
-Nov 20 10:24:23 raspberrypi node[33521]: LAN URL:    http://192.168.0.127:2283/manifest.json
-Nov 20 10:24:23 raspberrypi node[33521]: Funnel URL: https://raspberrypi.napoleon-degree.ts.net/manifest.json
-Nov 20 10:25:08 raspberrypi node[33521]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 10:25:12 raspberrypi node[33521]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/a-z?l=&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 10:25:18 raspberrypi node[33521]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/by-genre?g=ak%C4%8Dn%C3%AD&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 10:25:20 raspberrypi node[33521]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 10:25:27 raspberrypi node[33521]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 10:25:29 raspberrypi node[33521]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 10:25:29 raspberrypi node[33521]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 10:25:30 raspberrypi node[33521]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:26:08 raspberrypi node[33521]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/a-z?l=&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:27:44 raspberrypi node[33521]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:27 raspberrypi systemd[1]: Stopping stremio-sosac.service - Stremio Sosac Addon Service...
+Nov 20 10:39:27 raspberrypi systemd[1]: stremio-sosac.service: Deactivated successfully.
+Nov 20 10:39:27 raspberrypi systemd[1]: Stopped stremio-sosac.service - Stremio Sosac Addon Service.
+Nov 20 10:39:27 raspberrypi systemd[1]: stremio-sosac.service: Consumed 1.736s CPU time.
+Nov 20 10:39:27 raspberrypi systemd[1]: Started stremio-sosac.service - Stremio Sosac Addon Service.
+Nov 20 10:39:27 raspberrypi node[33587]: Stremio Sosac addon listening on http://0.0.0.0:2283
+Nov 20 10:39:27 raspberrypi node[33587]: LAN URL:    http://192.168.0.127:2283/manifest.json
+Nov 20 10:39:27 raspberrypi node[33587]: Funnel URL: https://raspberrypi.napoleon-degree.ts.net/manifest.json
+Nov 20 10:39:38 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies-az search: null skip: 0 page: 1
+Nov 20 10:39:39 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
+Nov 20 10:39:39 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:39 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies-genre search: null skip: 0 page: 1
+Nov 20 10:39:39 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/by-genre?g=ak%C4%8Dn%C3%AD&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:39 raspberrypi node[33587]: Catalog request: type: series id: sosac-series-az search: null skip: 0 page: 1
+Nov 20 10:39:39 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/serials/lists/a-z?l=a&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:39 raspberrypi node[33587]: Catalog request: type: series id: sosac-series-genre search: null skip: 0 page: 1
+Nov 20 10:39:39 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/serials/lists/by-genre?g=drama&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:39 raspberrypi node[33587]: Catalog request: type: series id: sosac-series search: null skip: 0 page: 1
+Nov 20 10:39:39 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/serials/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:39 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/a-z?l=a&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:43 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies-az search: null skip: 0 page: 1
+Nov 20 10:39:43 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/a-z?l=a&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:49 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies-az search: null skip: 0 page: 1
+Nov 20 10:39:49 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/a-z?l=a&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:50 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies-az search: null skip: 0 page: 1
+Nov 20 10:39:50 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/a-z?l=a&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:51 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies-az search: null skip: 0 page: 1
+Nov 20 10:39:51 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/a-z?l=a&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:51 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies-az search: null skip: 0 page: 1
+Nov 20 10:39:51 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/a-z?l=a&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:52 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies-az search: null skip: 0 page: 1
+Nov 20 10:39:52 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/a-z?l=a&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:52 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies-az search: null skip: 0 page: 1
+Nov 20 10:39:52 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/a-z?l=a&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:53 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies-az search: null skip: 0 page: 1
+Nov 20 10:39:53 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/a-z?l=a&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:54 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies-az search: null skip: 0 page: 1
+Nov 20 10:39:54 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/a-z?l=a&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:54 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies-az search: null skip: 0 page: 1
+Nov 20 10:39:54 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/a-z?l=a&pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:39:58 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
+Nov 20 10:39:58 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:40:02 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
+Nov 20 10:40:02 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:40:02 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
+Nov 20 10:40:02 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
+Nov 20 10:40:03 raspberrypi node[33587]: Catalog request: type: movie id: sosac-movies search: null skip: 0 page: 1
+Nov 20 10:40:03 raspberrypi node[33587]: Volání API na URL: https://kodi-api.sosac.to/movies/lists/popular?pocet=100&stranka=1&username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
 
