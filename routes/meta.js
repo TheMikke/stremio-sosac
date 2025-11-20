@@ -11,7 +11,6 @@ function parseDuration(dl) {
     return { minutes };
 }
 
-
 function toArray(val) {
     if (!val) return [];
     return Array.isArray(val) ? val : [val];
@@ -70,10 +69,10 @@ export async function handleMeta(api, req, res, type, id) {
             // typ zvuku "e"
             const audio = data.e || null;
 
-            // délka "dl" -> min 
+            // délka "dl" -> min
             const { minutes: runtimeMinutes } = parseDuration(data.dl);
 
-            // runtime, jak chce Stremio – string
+            // runtime, jak chce Stremio – string, jen v minutách
             const runtime = runtimeMinutes != null ? `${runtimeMinutes} min` : null;
 
             // datum přidání "r"
@@ -100,7 +99,7 @@ export async function handleMeta(api, req, res, type, id) {
                 data.b ||
                 poster;
 
-            // releaseInfo – uprostřed
+            // releaseInfo – jen rok
             const releaseInfo = year ? String(year) : "";
 
             const meta = {
@@ -118,7 +117,7 @@ export async function handleMeta(api, req, res, type, id) {
                 genres,
                 releaseInfo,
                 imdbRating,       // string, ale je to ve skutečnosti ČSFD/10
-                runtime,          // string ("123 min" nebo "1h 23m")
+                runtime,          // string ("123 min")
                 language,         // string
                 country,          // string
                 director: directors, // pole stringů
@@ -235,19 +234,13 @@ export async function handleMeta(api, req, res, type, id) {
                     // audio "e"
                     const epAudio = epObj.e || null;
 
-                    // délka "dl"
-                    const {
-                        minutes: epRuntimeMinutes,
-                        label: epRuntimeLabel
-                    } = parseDuration(epObj.dl);
-                    const epRuntime = epRuntimeLabel || (epRuntimeMinutes != null
+                    // délka "dl" -> jen minuty
+                    const { minutes: epRuntimeMinutes } = parseDuration(epObj.dl);
+                    const epRuntime = epRuntimeMinutes != null
                         ? `${epRuntimeMinutes} min`
-                        : null);
+                        : null;
 
                     // žánry / země pro epizodu (pokud má vlastní, jinak z info)
-                    const epGenres = toArray(epObj.g).length
-                        ? toArray(epObj.g).map(String)
-                        : genres;
                     const epCountries = toArray(epObj.o).length
                         ? toArray(epObj.o).map(String)
                         : countries;
@@ -261,7 +254,7 @@ export async function handleMeta(api, req, res, type, id) {
 
                     // linkId "l" – používá se ve /stream
                     const linkId = epObj.l || null;
-                    
+
                     videos.push({
                         id: `sosac-episode-${epId}`,
                         title,
@@ -283,20 +276,21 @@ export async function handleMeta(api, req, res, type, id) {
             }
 
             const releaseInfo = year ? String(year) : "";
-            
+
             const meta = {
                 id,
                 type: "series",
-                name,
+                name: seriesTitle,
                 poster,
                 posterShape: "poster",
                 background,
-                description,
+                description: seriesDescription,
                 year,
+                genres,
                 releaseInfo,
                 imdbRating,
                 country,
-                director,
+                director: directors,
                 cast,
                 videos
             };
