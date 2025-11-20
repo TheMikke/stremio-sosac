@@ -1,25 +1,16 @@
 // routes/meta.js
-// Meta odpověď pro Stremio podle ofiko struktury:
-// https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/meta.md
 
 import { sendJson, sendError, getTitleCs } from "./utils.js";
 
-// seconds -> { minutes, label "1h 23m" }
 function parseDuration(dl) {
-    if (!dl) return { minutes: null, label: null };
+    if (!dl) return { minutes: null };
     const secs = parseInt(dl, 10);
-    if (Number.isNaN(secs) || secs <= 0) return { minutes: null, label: null };
+    if (Number.isNaN(secs) || secs <= 0) return { minutes: null };
 
     const minutes = Math.round(secs / 60);
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-
-    let label = "";
-    if (h > 0) label += `${h}h`;
-    if (m > 0 || h === 0) label += (label ? " " : "") + `${m}m`;
-
-    return { minutes, label };
+    return { minutes };
 }
+
 
 function toArray(val) {
     if (!val) return [];
@@ -79,14 +70,11 @@ export async function handleMeta(api, req, res, type, id) {
             // typ zvuku "e"
             const audio = data.e || null;
 
-            // délka "dl" -> min + label "1h 23m"
-            const { minutes: runtimeMinutes, label: runtimeLabel } =
-                parseDuration(data.dl);
+            // délka "dl" -> min 
+            const { minutes: runtimeMinutes } = parseDuration(data.dl);
 
             // runtime, jak chce Stremio – string
-            const runtime = runtimeLabel || (runtimeMinutes != null
-                ? `${runtimeMinutes} min`
-                : null);
+            const runtime = runtimeMinutes != null ? `${runtimeMinutes} min` : null;
 
             // datum přidání "r"
             const added = data.r || null;
@@ -112,14 +100,8 @@ export async function handleMeta(api, req, res, type, id) {
                 data.b ||
                 poster;
 
-            // releaseInfo – Stremio ukazuje vedle plakátu
-            const releaseInfoParts = [];
-            if (year) releaseInfoParts.push(String(year));
-            if (country) releaseInfoParts.push(country);
-            if (csfdRating != null)
-                releaseInfoParts.push(`ČSFD ${csfdRating}%`);
-            if (runtimeLabel) releaseInfoParts.push(runtimeLabel);
-            const releaseInfo = releaseInfoParts.join(" • ");
+            // releaseInfo – uprostřed
+            const releaseInfo = year ? String(year) : "";
 
             const meta = {
                 // povinné
