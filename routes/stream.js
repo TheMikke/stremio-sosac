@@ -5,104 +5,103 @@ import { sendJson, sendError, findLinkId } from "./utils.js";
 // /stream/{type}/{id}.json
 export async function handleStream(api, req, res, type, id) {
     try {
-        // FILM
+        // Zatím řešíme jen FILMY (movie)
         if (type === "movie" && id.startsWith("sosac-movie-")) {
             const movieId = id.replace("sosac-movie-", "");
+
+            // 1) Dotaz na Sosáč – detail filmu
             const data = await api.movies("id", { arg2: movieId });
 
+            // 2) Z detailu vytáhneme ID linku pro streamuj.tv
             const linkId = findLinkId(data);
             if (!linkId) {
+                console.log("Nenalezen linkId pro film", movieId);
                 return sendJson(res, { streams: [] });
             }
 
+            console.log("Nalezen linkId pro Streamuj.tv:", linkId);
+
+            // 3) Zavoláme JSON API streamuj.tv, dostaneme strukturu s URL
             const streamData = await api.streamujGet(linkId);
-            const urls = streamData.URL || streamData.Url || {};
+            console.log("JSON z Streamuj.tv:", streamData);
 
-            const langKeys = Object.keys(urls);
-            if (!langKeys.length) return sendJson(res, { streams: [] });
+            const urlRoot = streamData.URL || streamData.Url || null;
+            if (!urlRoot || typeof urlRoot !== "object") {
+                console.log("Streamuj.tv nevrátil URL objekt");
+                return sendJson(res, { streams: [] });
+            }
 
-            const preferredLangOrder = ["CZECH", "CZ", "SK", "ENGLISH", "EN"];
+            // 4) vybereme jazyk – preferuj CZ, jinak první
+            const langKeys = Object.keys(urlRoot);
+            if (!langKeys.length) {
+                console.log("Streamuj.tv neobsahuje žádné jazykové větve");
+                return sendJson(res, { streams: [] });
+            }
+
             let lang = langKeys[0];
-            for (const L of preferredLangOrder) {
-                if (langKeys.includes(L)) {
-                    lang = L;
+            for (const pref of ["CZ", "CZECH", "Sk", "SK", "EN", "ENGLISH"]) {
+                if (langKeys.includes(pref)) {
+                    lang = pref;
                     break;
                 }
             }
 
-            const qualities = Object.keys(urls[lang] || {}).filter(
-                q => q.toLowerCase() !== "subtitles"
-            );
-            if (!qualities.length) return sendJson(res, { streams: [] });
+            const qualityObj = urlRoot[lang];
+            if (!qualityObj || typeof qualityObj !== "object") {
+                console.log("Streamuj.tv: chybí quality objekt pro jazyk", lang);
+                return sendJson(res, { streams: [] });
+            }
 
-            let qual = qualities[0];
-            if (qualities.includes("1080p")) qual = "1080p";
-            else if (qualities.includes("720p")) qual = "720p";
+            const qualities = Object.keys(qualityObj)
+                .filter(q => q.toLowerCase() !== "subtitles");
 
-            const link = urls[lang][qual];
+            if (!qualities.length) {
+                console.log("Streamuj.tv: žádné kvality pro jazyk", lang);
+                return sendJson(res, { streams: [] });
+            }
 
-            // Přidání URL pro oba streamy (SD a HD)
-            const streams = [
-                {
-                    title: `${lang} ${qual}`,
-                    url: link,
+            // 5) Postavíme pole streams pro Stremio
+            const streams = [];
+
+            // pokud existuje HD, dáme ho jako první
+            if (qualityObj.HD) {
+                streams.push({
+                    title: `${lang} HD`,
+                    url: qualityObj.HD,
                     isFree: true
-                }
-            ];
+                });
+            }
+            if (qualityObj.SD) {
+                streams.push({
+                    title: `${lang} SD`,
+                    url: qualityObj.SD,
+                    isFree: true
+                });
+            }
 
-            return sendJson(res, { streams });
-        }
-
-        // EPIZODA
-        if (type === "series" && id.startsWith("sosac-episode-")) {
-            const epId = id.replace("sosac-episode-", "");
-            const data = await api.serials("", { arg2: epId, arg3: "episodes" });
-
-            const linkId = findLinkId(data);
-            if (!linkId) return sendJson(res, { streams: [] });
-
-            const streamData = await api.streamujGet(linkId);
-            const urls = streamData.URL || {};
-
-            const langKeys = Object.keys(urls);
-            if (!langKeys.length) return sendJson(res, { streams: [] });
-
-            const preferredLangOrder = ["CZECH", "CZ", "SK", "ENGLISH", "EN"];
-            let lang = langKeys[0];
-            for (const L of preferredLangOrder) {
-                if (langKeys.includes(L)) {
-                    lang = L;
-                    break;
+            // fallback – kdyby byly jiné klíče (1080p, 720p, original…)
+            if (!streams.length) {
+                for (const q of qualities) {
+                    const u = qualityObj[q];
+                    if (!u) continue;
+                    streams.push({
+                        title: `${lang} ${q}`,
+                        url: u,
+                        isFree: true
+                    });
                 }
             }
 
-            const qualities = Object.keys(urls[lang] || {}).filter(
-                q => q.toLowerCase() !== "subtitles"
-            );
-            if (!qualities.length) return sendJson(res, { streams: [] });
-
-            let qual = qualities[0];
-            if (qualities.includes("1080p")) qual = "1080p";
-            else if (qualities.includes("720p")) qual = "720p";
-
-            const link = urls[lang][qual];
-
-            // Přidání URL pro oba streamy (SD a HD)
-            const streams = [
-                {
-                    title: `${lang} ${qual}`,
-                    url: link,
-                    isFree: true
-                }
-            ];
+            console.log("VRACÍM STREAMY PRO STREMIO:", streams);
 
             return sendJson(res, { streams });
         }
 
+        // Ostatní typy (series atd.) zatím vrací prázdné streamy
         return sendJson(res, { streams: [] });
+
     } catch (e) {
         console.error("Stream error:", e);
         sendError(res, 500, "Stream error: " + e.message);
     }
 }
-
