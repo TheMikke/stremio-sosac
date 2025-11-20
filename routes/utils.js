@@ -41,7 +41,7 @@ export function getTitleCs(n) {
     return Array.isArray(cs) ? cs[0] : cs;
 }
 
-function getTitleEn(n) {
+export function getTitleEn(n) {
     if (!n) return "";
     if (typeof n === "string") return n;
     if (n.us) return Array.isArray(n.us) ? n.us[0] : n.us;
