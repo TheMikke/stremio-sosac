@@ -261,7 +261,8 @@ export async function handleMeta(api, req, res, type, id) {
 
                     // linkId "l" – používá se ve /stream
                     const linkId = epObj.l || null;
-
+                    const released = epObj.r || null;
+                    
                     videos.push({
                         id: `sosac-episode-${epId}`,
                         title,
@@ -283,13 +284,8 @@ export async function handleMeta(api, req, res, type, id) {
                 }
             }
 
-            const releaseInfoParts = [];
-            if (year) releaseInfoParts.push(String(year));
-            if (country) releaseInfoParts.push(country);
-            if (csfdRating != null)
-                releaseInfoParts.push(`ČSFD ${csfdRating}%`);
-            const releaseInfo = releaseInfoParts.join(" • ");
-
+            const releaseInfo = year ? String(year) : "";
+            
             const meta = {
                 id,
                 type: "series",
