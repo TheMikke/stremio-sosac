@@ -1,45 +1,67 @@
-Nov 20 09:00:34 raspberrypi node[33167]: Volání API na URL: https://kodi-api.sosac.to/movies/2240?username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 09:00:34 raspberrypi node[33167]: STREAM movie, sosac ID: 2240
-Nov 20 09:00:34 raspberrypi node[33167]: Volání API na URL: https://kodi-api.sosac.to/movies/2240?username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 09:00:35 raspberrypi node[33167]: Nalezen linkId pro Streamuj.tv: fcd282996385c6d9d1df
-Nov 20 09:00:35 raspberrypi node[33167]: Volání API na URL: https://www.streamuj.tv/json_api_player.php?action=get-video-links&d=19&link=fcd282996385c6d9d1df&login=Mikke14&password=dbe142dd2efff4524db04f85acab6819&location=1
-Nov 20 09:00:35 raspberrypi node[33167]: JSON z Streamuj.tv: {
-Nov 20 09:00:35 raspberrypi node[33167]:   version: '1.0',
-Nov 20 09:00:35 raspberrypi node[33167]:   action: 'get-video-links',
-Nov 20 09:00:35 raspberrypi node[33167]:   timestamp: 1763624646,
-Nov 20 09:00:35 raspberrypi node[33167]:   result: 1,
-Nov 20 09:00:35 raspberrypi node[33167]:   URL: {
-Nov 20 09:00:35 raspberrypi node[33167]:     CZ: {
-Nov 20 09:00:35 raspberrypi node[33167]:       SD: 'https://www.streamuj.tv/video/fcd282996385c6d9d1df?streamuj=original&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
-Nov 20 09:00:35 raspberrypi node[33167]:       HD: 'https://www.streamuj.tv/video/fcd282996385c6d9d1df?streamuj=hd&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3'
-Nov 20 09:00:35 raspberrypi node[33167]:     }
-Nov 20 09:00:35 raspberrypi node[33167]:   },
-Nov 20 09:00:35 raspberrypi node[33167]:   errormessage: 0
-Nov 20 09:00:35 raspberrypi node[33167]: }
-Nov 20 09:00:35 raspberrypi node[33167]: Odpověď ze Streamuj.tv: {
-Nov 20 09:00:35 raspberrypi node[33167]:   version: '1.0',
-Nov 20 09:00:35 raspberrypi node[33167]:   action: 'get-video-links',
-Nov 20 09:00:35 raspberrypi node[33167]:   timestamp: 1763624646,
-Nov 20 09:00:35 raspberrypi node[33167]:   result: 1,
-Nov 20 09:00:35 raspberrypi node[33167]:   URL: {
-Nov 20 09:00:35 raspberrypi node[33167]:     CZ: {
-Nov 20 09:00:35 raspberrypi node[33167]:       SD: 'https://www.streamuj.tv/video/fcd282996385c6d9d1df?streamuj=original&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
-Nov 20 09:00:35 raspberrypi node[33167]:       HD: 'https://www.streamuj.tv/video/fcd282996385c6d9d1df?streamuj=hd&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3'
-Nov 20 09:00:35 raspberrypi node[33167]:     }
-Nov 20 09:00:35 raspberrypi node[33167]:   },
-Nov 20 09:00:35 raspberrypi node[33167]:   errormessage: 0
-Nov 20 09:00:35 raspberrypi node[33167]: }
-Nov 20 09:00:35 raspberrypi node[33167]: VRACÍM STREAMY PRO STREMIO: [
-Nov 20 09:00:35 raspberrypi node[33167]:   {
-Nov 20 09:00:35 raspberrypi node[33167]:     title: 'CZ SD',
-Nov 20 09:00:35 raspberrypi node[33167]:     url: 'https://www.streamuj.tv/video/fcd282996385c6d9d1df?streamuj=original&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
-Nov 20 09:00:35 raspberrypi node[33167]:     isFree: true
-Nov 20 09:00:35 raspberrypi node[33167]:   },
-Nov 20 09:00:35 raspberrypi node[33167]:   {
-Nov 20 09:00:35 raspberrypi node[33167]:     title: 'CZ HD',
-Nov 20 09:00:35 raspberrypi node[33167]:     url: 'https://www.streamuj.tv/video/fcd282996385c6d9d1df?streamuj=hd&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
-Nov 20 09:00:35 raspberrypi node[33167]:     isFree: true
-Nov 20 09:00:35 raspberrypi node[33167]:   }
-Nov 20 09:00:35 raspberrypi node[33167]: ]
-
-
+Nov 20 09:49:36 raspberrypi node[33319]: Stahuji HTML stránku Streamuj.tv: https://www.streamuj.tv/video/422a06ced00f3ec40aec?streamuj=original&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 09:49:36 raspberrypi node[33319]: Nalezeno přímé video URL: https://s23.streamuj.tv:443/vid/a75de79218ff988d3b8edde422fb8865/691ed243/422a06ced00f3ec40aec_sd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 09:49:36 raspberrypi node[33319]: [FILM] Používám přímé video URL: https://s23.streamuj.tv:443/vid/a75de79218ff988d3b8edde422fb8865/691ed243/422a06ced00f3ec40aec_sd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 09:49:36 raspberrypi node[33319]: Stahuji HTML stránku Streamuj.tv: https://www.streamuj.tv/video/422a06ced00f3ec40aec?streamuj=hd&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 09:49:37 raspberrypi node[33319]: Nalezeno přímé video URL: https://s23.streamuj.tv:443/vid/9f615e28b92fa405e6809a6b5fba5e8a/691ed243/422a06ced00f3ec40aec_hd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 09:49:37 raspberrypi node[33319]: [FILM] Používám přímé video URL: https://s23.streamuj.tv:443/vid/9f615e28b92fa405e6809a6b5fba5e8a/691ed243/422a06ced00f3ec40aec_hd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 09:49:37 raspberrypi node[33319]: Stahuji HTML stránku Streamuj.tv: {
+Nov 20 09:49:37 raspberrypi node[33319]:   CZ: 'https://www.streamuj.tv/video/422a06ced00f3ec40aec?streamuj=subtitles&id=34faab35e567f12cd560'
+Nov 20 09:49:37 raspberrypi node[33319]: }
+Nov 20 09:49:37 raspberrypi node[33319]: Chyba resolveStreamujDirectUrl: TypeError: Failed to parse URL from [object Object]
+Nov 20 09:49:37 raspberrypi node[33319]:     at node:internal/deps/undici/undici:13510:13
+Nov 20 09:49:37 raspberrypi node[33319]:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+Nov 20 09:49:37 raspberrypi node[33319]:     at async SosacApi.resolveStreamujDirectUrl (file:///home/mikke/stremio-sosac/sosacApi.js:143:21)
+Nov 20 09:49:37 raspberrypi node[33319]:     at async buildStreamsFromStreamuj (file:///home/mikke/stremio-sosac/routes/stream.js:38:27)
+Nov 20 09:49:37 raspberrypi node[33319]:     at async handleStream (file:///home/mikke/stremio-sosac/routes/stream.js:85:29) {
+Nov 20 09:49:37 raspberrypi node[33319]:   [cause]: TypeError: Invalid URL
+Nov 20 09:49:37 raspberrypi node[33319]:       at new URL (node:internal/url:806:29)
+Nov 20 09:49:37 raspberrypi node[33319]:       at new Request (node:internal/deps/undici/undici:9586:25)
+Nov 20 09:49:37 raspberrypi node[33319]:       at fetch (node:internal/deps/undici/undici:10315:25)
+Nov 20 09:49:37 raspberrypi node[33319]:       at fetch (node:internal/deps/undici/undici:13508:10)
+Nov 20 09:49:37 raspberrypi node[33319]:       at fetch (node:internal/bootstrap/web/exposed-window-or-worker:72:12)
+Nov 20 09:49:37 raspberrypi node[33319]:       at SosacApi.resolveStreamujDirectUrl (file:///home/mikke/stremio-sosac/sosacApi.js:143:27)
+Nov 20 09:49:37 raspberrypi node[33319]:       at buildStreamsFromStreamuj (file:///home/mikke/stremio-sosac/routes/stream.js:38:37)
+Nov 20 09:49:37 raspberrypi node[33319]:       at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+Nov 20 09:49:37 raspberrypi node[33319]:       at async handleStream (file:///home/mikke/stremio-sosac/routes/stream.js:85:29) {
+Nov 20 09:49:37 raspberrypi node[33319]:     code: 'ERR_INVALID_URL',
+Nov 20 09:49:37 raspberrypi node[33319]:     input: '[object Object]'
+Nov 20 09:49:37 raspberrypi node[33319]:   }
+Nov 20 09:49:37 raspberrypi node[33319]: }
+Nov 20 09:49:37 raspberrypi node[33319]: [FILM] Nepodařilo se najít přímé video URL, použiju fallback playerUrl: {
+Nov 20 09:49:37 raspberrypi node[33319]:   CZ: 'https://www.streamuj.tv/video/422a06ced00f3ec40aec?streamuj=subtitles&id=34faab35e567f12cd560'
+Nov 20 09:49:37 raspberrypi node[33319]: }
+Nov 20 09:49:37 raspberrypi node[33319]: Stahuji HTML stránku Streamuj.tv: https://www.streamuj.tv/video/422a06ced00f3ec40aec?streamuj=soundtrack&id=c76100b6e4b69b2c15d1&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 09:49:37 raspberrypi node[33319]: Nalezeno přímé video URL: https://s22.streamuj.tv:443/vid/1c9cd0f220305e24ee963db4c9dfb427/691ed243/c76100b6e4b69b2c15d1_sd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 09:49:37 raspberrypi node[33319]: [FILM] Používám přímé video URL: https://s22.streamuj.tv:443/vid/1c9cd0f220305e24ee963db4c9dfb427/691ed243/c76100b6e4b69b2c15d1_sd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 09:49:37 raspberrypi node[33319]: Stahuji HTML stránku Streamuj.tv: https://www.streamuj.tv/video/422a06ced00f3ec40aec?streamuj=soundtrack&id=c76100b6e4b69b2c15d1&hd=1&location=1&pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 09:49:37 raspberrypi node[33319]: Nalezeno přímé video URL: https://s22.streamuj.tv:443/vid/bc0dd9fbba4353e3e649bb7c6d38b792/691ed243/c76100b6e4b69b2c15d1_hd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 09:49:37 raspberrypi node[33319]: [FILM] Používám přímé video URL: https://s22.streamuj.tv:443/vid/bc0dd9fbba4353e3e649bb7c6d38b792/691ed243/c76100b6e4b69b2c15d1_hd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3
+Nov 20 09:49:37 raspberrypi node[33319]: [FILM] VRACÍM STREAMY PRO STREMIO: [
+Nov 20 09:49:37 raspberrypi node[33319]:   {
+Nov 20 09:49:37 raspberrypi node[33319]:     title: 'EN SD',
+Nov 20 09:49:37 raspberrypi node[33319]:     url: 'https://s23.streamuj.tv:443/vid/a75de79218ff988d3b8edde422fb8865/691ed243/422a06ced00f3ec40aec_sd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
+Nov 20 09:49:37 raspberrypi node[33319]:     isFree: true
+Nov 20 09:49:37 raspberrypi node[33319]:   },
+Nov 20 09:49:37 raspberrypi node[33319]:   {
+Nov 20 09:49:37 raspberrypi node[33319]:     title: 'EN HD',
+Nov 20 09:49:37 raspberrypi node[33319]:     url: 'https://s23.streamuj.tv:443/vid/9f615e28b92fa405e6809a6b5fba5e8a/691ed243/422a06ced00f3ec40aec_hd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
+Nov 20 09:49:37 raspberrypi node[33319]:     isFree: true
+Nov 20 09:49:37 raspberrypi node[33319]:   },
+Nov 20 09:49:37 raspberrypi node[33319]:   {
+Nov 20 09:49:37 raspberrypi node[33319]:     title: 'EN subtitles',
+Nov 20 09:49:37 raspberrypi node[33319]:     url: {
+Nov 20 09:49:37 raspberrypi node[33319]:       CZ: 'https://www.streamuj.tv/video/422a06ced00f3ec40aec?streamuj=subtitles&id=34faab35e567f12cd560'
+Nov 20 09:49:37 raspberrypi node[33319]:     },
+Nov 20 09:49:37 raspberrypi node[33319]:     isFree: true
+Nov 20 09:49:37 raspberrypi node[33319]:   },
+Nov 20 09:49:37 raspberrypi node[33319]:   {
+Nov 20 09:49:37 raspberrypi node[33319]:     title: 'CZ SD',
+Nov 20 09:49:37 raspberrypi node[33319]:     url: 'https://s22.streamuj.tv:443/vid/1c9cd0f220305e24ee963db4c9dfb427/691ed243/c76100b6e4b69b2c15d1_sd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
+Nov 20 09:49:37 raspberrypi node[33319]:     isFree: true
+Nov 20 09:49:37 raspberrypi node[33319]:   },
+Nov 20 09:49:37 raspberrypi node[33319]:   {
+Nov 20 09:49:37 raspberrypi node[33319]:     title: 'CZ HD',
+Nov 20 09:49:37 raspberrypi node[33319]:     url: 'https://s22.streamuj.tv:443/vid/bc0dd9fbba4353e3e649bb7c6d38b792/691ed243/c76100b6e4b69b2c15d1_hd.mp4?pass=Mikke14:::21771e584c4ad0d37b6d76bc99c08bb3',
+Nov 20 09:49:37 raspberrypi node[33319]:     isFree: true
+Nov 20 09:49:37 raspberrypi node[33319]:   }
+Nov 20 09:49:37 raspberrypi node[33319]: ]
