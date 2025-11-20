@@ -1,6 +1,6 @@
 // routes/catalog.js
 
-import { sendJson, sendError, getTitleCs } from "./utils.js";
+import { sendJson, sendError, getTitleCs, getTitleEn } from "./utils.js";
 
 // dl (sekundy) -> minuty
 function secsToMinutes(dl) {
@@ -28,7 +28,7 @@ function normalizeCast(f) {
 }
 
 function mapMovieItemToMetaPreview(item) {
-    const title = getTitleCs(item.n);
+    const title = getTitleEn(item.n);
     const mid = item._id || item.id;
 
     const year = item.y || item.year || null;
@@ -87,7 +87,7 @@ function mapMovieItemToMetaPreview(item) {
 }
 
 function mapSeriesItemToMetaPreview(item) {
-    const title = getTitleCs(item.n);
+    const title = getTitleEn(item.n);
     const sid = item._id || item.id;
 
     const year = item.y || item.year || null;
