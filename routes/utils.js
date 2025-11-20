@@ -40,3 +40,12 @@ export function getTitleCs(n) {
     if (!cs) return "";
     return Array.isArray(cs) ? cs[0] : cs;
 }
+
+function getTitleEn(n) {
+    if (!n) return "";
+    if (typeof n === "string") return n;
+    if (n.us) return Array.isArray(n.us) ? n.us[0] : n.us;
+    if (n.en) return Array.isArray(n.en) ? n.en[0] : n.en;
+    if (n.cs) return Array.isArray(n.cs) ? n.cs[0] : n.cs;
+    return "";
+}
