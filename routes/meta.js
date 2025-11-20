@@ -137,166 +137,167 @@ export async function handleMeta(api, req, res, type, id) {
         }
 
         // ============================================================
-        // SERIÁL
-        // ============================================================
-        if (type === "series" && id.startsWith("sosac-series-")) {
-            const seriesId = id.replace("sosac-series-", "");
+// SERIÁL
+// ============================================================
+if (type === "series" && id.startsWith("sosac-series-")) {
+    const seriesId = id.replace("sosac-series-", "");
 
-            // serialDetail:
-            // { info: {...}, "1": { "1": epObj, ... }, "2": { ... }, ... }
-            const data = await api.serialDetail(seriesId);
-            const info = data.info || data["info"] || {};
+    // serialDetail:
+    // { info: {...}, "1": { "1": epObj, ... }, "2": { ... }, ... }
+    const data = await api.serialDetail(seriesId);
+    const info = data.info || data["info"] || {};
 
-            // název seriálu z "n"
-            const seriesTitle = getTitleCs(info.n || info);
+    // název seriálu z "n"
+    const seriesTitle = getTitleCs(info.n || info);
 
-            // popis seriálu z "p" (pokud existuje)
-            const seriesDescription =
-                typeof info.p === "string" ? info.p.trim() : "";
+    // popis seriálu z "p" (pokud existuje)
+    const seriesDescription =
+        typeof info.p === "string" ? info.p.trim() : "";
 
-            const year = info.y || info.year || null;
-            const genres = toArray(info.g).map(String);
-            const countries = toArray(info.o).map(String);
-            const country = countries.join(", ") || null;
+    const year = info.y || info.year || null;
+    const genres = toArray(info.g).map(String);
+    const countries = toArray(info.o).map(String);
+    const country = countries.join(", ") || null;
 
-            // režiséři "h"
-            const directors = normalizeDirectors(info.h);
+    // režiséři "h"
+    const directors = normalizeDirectors(info.h);
 
-            // herci "f"
-            const cast = normalizeCast(info.f);
+    // herci "f"
+    const cast = normalizeCast(info.f);
 
-            // rating seriálu z ČSFD
-            const csfdRating =
-                info.c != null ? parseInt(info.c, 10) : null;
-            const rating10 = csfdRating != null ? csfdRating / 10 : null;
-            const imdbRating =
-                rating10 != null ? rating10.toFixed(1) : undefined;
+    // rating seriálu z ČSFD
+    const csfdRating =
+        info.c != null ? parseInt(info.c, 10) : null;
+    const rating10 = csfdRating != null ? csfdRating / 10 : null;
+    const imdbRating =
+        rating10 != null ? rating10.toFixed(1) : undefined;
 
-            // obrázky seriálu
-            const poster =
-                info.i ||
-                `https://movies.sosac.tv/images/558x313/serial-${seriesId}.jpg`;
-            const background =
-                info.b ||
+    // obrázky seriálu
+    const poster =
+        info.i ||
+        `https://movies.sosac.tv/images/558x313/serial-${seriesId}.jpg`;
+    const background =
+        info.b ||
+        poster;
+
+    const videos = [];
+
+    // Sezóny + epizody (s, ep, p, d, q, dl, o, g, ne/n)
+    for (const key of Object.keys(data)) {
+        if (key === "info") continue;
+
+        const seasonBlock = data[key];
+        if (!seasonBlock || typeof seasonBlock !== "object") continue;
+
+        for (const epKey of Object.keys(seasonBlock)) {
+            const epObj = seasonBlock[epKey];
+            if (!epObj) continue;
+
+            const epId = epObj._id || epObj.id;
+            if (!epId) continue;
+
+            const season = epObj.s
+                ? parseInt(epObj.s, 10)
+                : parseInt(key, 10);
+            const episode = epObj.ep
+                ? parseInt(epObj.ep, 10)
+                : parseInt(epKey, 10);
+
+            if (Number.isNaN(season) || Number.isNaN(episode)) continue;
+
+            // název epizody "ne" (cs/us) nebo fallback na název seriálu
+            const epTitleName = getTitleCs(
+                epObj.ne || epObj.n || info.n || seriesTitle
+            );
+
+            const title = `${season}x${String(episode).padStart(
+                2,
+                "0"
+            )} – ${epTitleName}`;
+
+            // popis epizody "p"
+            const overview =
+                typeof epObj.p === "string" && epObj.p.trim()
+                    ? epObj.p.trim()
+                    : seriesDescription;
+
+            // datum "r" – do released neposíláme, iOS má rád čistý JSON
+            const rawDate = epObj.r || null;
+
+            // jazyk "d"
+            const epLangs = toArray(epObj.d).map(String);
+            const epLanguage = epLangs.join(", ") || null;
+
+            // kvalita "q"
+            const epQuality = epObj.q || null;
+
+            // audio "e"
+            const epAudio = epObj.e || null;
+
+            // délka "dl" -> jen minuty
+            const { minutes: epRuntimeMinutes } = parseDuration(epObj.dl);
+            const epRuntime = epRuntimeMinutes != null
+                ? `${epRuntimeMinutes} min`
+                : null;
+
+            // země pro epizodu (pokud má vlastní, jinak z info)
+            const epCountries = toArray(epObj.o).length
+                ? toArray(epObj.o).map(String)
+                : countries;
+            const epCountry = epCountries.join(", ") || null;
+
+            // náhled epizody "ie" / "i"
+            const thumbnail =
+                epObj.ie ||
+                epObj.i ||
                 poster;
 
-            const videos = [];
+            // linkId "l" – používá se ve /stream
+            const linkId = epObj.l || null;
 
-            // Sezóny + epizody (s, ep, p, d, q, dl, o, g, ne/n)
-            for (const key of Object.keys(data)) {
-                if (key === "info") continue;
-
-                const seasonBlock = data[key];
-                if (!seasonBlock || typeof seasonBlock !== "object") continue;
-
-                for (const epKey of Object.keys(seasonBlock)) {
-                    const epObj = seasonBlock[epKey];
-                    if (!epObj) continue;
-
-                    const epId = epObj._id || epObj.id;
-                    if (!epId) continue;
-
-                    const season = epObj.s
-                        ? parseInt(epObj.s, 10)
-                        : parseInt(key, 10);
-                    const episode = epObj.ep
-                        ? parseInt(epObj.ep, 10)
-                        : parseInt(epKey, 10);
-
-                    if (Number.isNaN(season) || Number.isNaN(episode)) continue;
-
-                    // název epizody "ne" (cs/us) nebo fallback na název seriálu
-                    const epTitleName = getTitleCs(
-                        epObj.ne || epObj.n || info.n || seriesTitle
-                    );
-
-                    const title = `${season}x${String(episode).padStart(
-                        2,
-                        "0"
-                    )} – ${epTitleName}`;
-
-                    // popis epizody "p"
-                    const overview =
-                        typeof epObj.p === "string" && epObj.p.trim()
-                            ? epObj.p.trim()
-                            : seriesDescription;
-
-                    // datum "r"
-                    const released = epObj.r || null;
-
-                    // jazyk "d"
-                    const epLangs = toArray(epObj.d).map(String);
-                    const epLanguage = epLangs.join(", ") || null;
-
-                    // kvalita "q"
-                    const epQuality = epObj.q || null;
-
-                    // audio "e"
-                    const epAudio = epObj.e || null;
-
-                    // délka "dl" -> jen minuty
-                    const { minutes: epRuntimeMinutes } = parseDuration(epObj.dl);
-                    const epRuntime = epRuntimeMinutes != null
-                        ? `${epRuntimeMinutes} min`
-                        : null;
-
-                    // žánry / země pro epizodu (pokud má vlastní, jinak z info)
-                    const epCountries = toArray(epObj.o).length
-                        ? toArray(epObj.o).map(String)
-                        : countries;
-                    const epCountry = epCountries.join(", ") || null;
-
-                    // náhled epizody "ie" / "i"
-                    const thumbnail =
-                        epObj.ie ||
-                        epObj.i ||
-                        poster;
-
-                    // linkId "l" – používá se ve /stream
-                    const linkId = epObj.l || null;
-
-                    videos.push({
-                        id: `sosac-episode-${epId}`,
-                        title,
-                        season,
-                        episode,
-                        overview,
-                        thumbnail,
-                        released,
-                        language: epLanguage,
-                        quality: epQuality,
-                        audio: epAudio,
-                        runtime: epRuntime,
-                        country: epCountry,
-                        year: epObj.y || year,
-                        added: released,
-                        linkId
-                    });
-                }
-            }
-
-            const releaseInfo = year ? String(year) : "";
-
-            const meta = {
-                id,
-                type: "series",
-                name: seriesTitle,
-                poster,
-                posterShape: "poster",
-                background,
-                description: seriesDescription,
-                year,
-                genres,
-                releaseInfo,
-                imdbRating,
-                country,
-                director: directors,
-                cast,
-                videos
-            };
-
-            return sendJson(res, { meta });
+            videos.push({
+                id: `sosac-episode-${epId}`,
+                title,
+                season,
+                episode,
+                overview,
+                thumbnail,
+                // released záměrně NEPOSÍLÁME
+                language: epLanguage,
+                quality: epQuality,
+                audio: epAudio,
+                runtime: epRuntime,
+                country: epCountry,
+                year: epObj.y || year,
+                added: rawDate,
+                linkId
+            });
         }
+    }
+
+    const releaseInfo = year ? String(year) : "";
+
+    const meta = {
+        id,
+        type: "series",
+        name: seriesTitle,
+        poster,
+        posterShape: "poster",
+        background,
+        description: seriesDescription,
+        year,
+        genres,
+        releaseInfo,
+        imdbRating,
+        country,
+        director: directors,
+        cast,
+        videos
+    };
+
+    return sendJson(res, { meta });
+}
+
 
         // neznámé ID
         return sendError(res, 404, "Unknown meta id");
