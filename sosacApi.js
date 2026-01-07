@@ -21,9 +21,11 @@ export default class SosacApi {
 
         this.SOSAC_API = `https://${this.sosacDomain}/`;
         this.STREAMUJ_API = `https://${this.streamujDomain}/json_api_player.php?`;
+        this.CINEMETA_API = "https://v3-cinemeta.strem.io/meta/";
 
         this._sosacPasswordHash = null;
         this._checkedLogin = false;
+
     }
 
     // ------------------- UTILITIES ------------------------
@@ -69,7 +71,7 @@ export default class SosacApi {
     }
 
     async getJson(url) {
-        console.log("Volání API na URL:", url);
+        console.log("Volání API");
         const r = await fetch(url);
         if (!r.ok)
             throw new Error(`HTTP GET ${url} selhalo: ${r.status}`);
@@ -98,7 +100,14 @@ export default class SosacApi {
         }
     }
 
-        // ------------------- STREAMUJ TV ------------------------
+    async cinemetaMeta(type, id) {
+        // type: "movie" | "series"
+        const url = `${this.CINEMETA_API}${encodeURIComponent(type)}/${encodeURIComponent(id)}.json`;
+        const data = await this.getJson(url);
+        return data?.meta || null;
+    }
+
+    // ------------------- STREAMUJ TV ------------------------
 
     async streamujGet(stream) {
         if (!this.streamujUser || !this.streamujPass)
@@ -128,64 +137,64 @@ export default class SosacApi {
         }
 
         const json = await this.getJson(url);
-        console.log("JSON z Streamuj.tv:", json);
+        console.log("JSON z Streamuj.tv: (received)");
         return json;
     }
 
     /*
      */
     async resolveStreamujDirectUrl(playerUrl) {
-    if (!playerUrl) return null;
+        if (!playerUrl) return null;
 
-    try {
-        console.log("Stahuji HTML stránku Streamuj.tv:", playerUrl);
+        try {
+            console.log("Stahuji HTML stránku Streamuj.tv");
 
-        const res = await fetch(playerUrl, {
-            headers: {
-                "User-Agent":
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
-                    "AppleWebKit/537.36 (KHTML, like Gecko) " +
-                    "Chrome/131.0.0.0 Safari/537.36",
-                "Referer": "https://www.streamuj.tv/",
-                "Origin": "https://www.streamuj.tv"
+            const res = await fetch(playerUrl, {
+                headers: {
+                    "User-Agent":
+                        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) " +
+                        "AppleWebKit/537.36 (KHTML, like Gecko) " +
+                        "Chrome/131.0.0.0 Safari/537.36",
+                    "Referer": "https://www.streamuj.tv/",
+                    "Origin": "https://www.streamuj.tv"
+                }
+            });
+
+            if (!res.ok) {
+                console.log("Streamuj.tv stránka chyba:", res.status, res.statusText);
+                return null;
             }
-        });
 
-        if (!res.ok) {
-            console.log("Streamuj.tv stránka chyba:", res.status, res.statusText);
+            const html = await res.text();
+
+            // Najdeme video URL (.mp4, .mkv, .webm nebo .m3u8)
+            const re =
+                /https:\/\/s\d+\.streamuj\.tv[^"' ]+\.(mp4|mkv|webm|m3u8)(\?[^"' ]+)?/i;
+
+            const match = html.match(re);
+
+            if (match && match[0]) {
+                console.log("Nalezeno přímé video URL");
+                return match[0];
+            }
+
+            // Fallback: hledáme strukturu jako 'file: "URL"'
+            const reFile =
+                /file"\s*:\s*"(?<url>https:\/\/s\d+\.streamuj\.tv[^"]+\.(mp4|mkv|webm|m3u8)[^"]*)"/i;
+
+            const m2 = html.match(reFile);
+            if (m2?.groups?.url) {
+                console.log("Nalezeno video z JS objektu");
+                return m2.groups.url;
+            }
+
+            console.log("Nepodařilo se najít žádné video URL.");
+            return null;
+        } catch (err) {
+            console.error("Chyba resolveStreamujDirectUrl:", err);
             return null;
         }
-
-        const html = await res.text();
-
-        // Najdeme video URL (.mp4, .mkv, .webm nebo .m3u8)
-        const re =
-            /https:\/\/s\d+\.streamuj\.tv[^"' ]+\.(mp4|mkv|webm|m3u8)(\?[^"' ]+)?/i;
-
-        const match = html.match(re);
-
-        if (match && match[0]) {
-            console.log("Nalezeno přímé video URL:", match[0]);
-            return match[0];
-        }
-
-        // Fallback: hledáme strukturu jako 'file: "URL"'
-        const reFile =
-            /file"\s*:\s*"(?<url>https:\/\/s\d+\.streamuj\.tv[^"]+\.(mp4|mkv|webm|m3u8)[^"]*)"/i;
-
-        const m2 = html.match(reFile);
-        if (m2?.groups?.url) {
-            console.log("Nalezeno video z JS objektu:", m2.groups.url);
-            return m2.groups.url;
-        }
-
-        console.log("Nepodařilo se najít žádné video URL.");
-        return null;
-    } catch (err) {
-        console.error("Chyba resolveStreamujDirectUrl:", err);
-        return null;
     }
-}
 
 
 
@@ -239,8 +248,7 @@ export default class SosacApi {
 
         } else if (stream === "id") {
             url =
-                `${this.SOSAC_API}movies/${encodeURIComponent(arg2)}?username=${
-                    this.sosacUser
+                `${this.SOSAC_API}movies/${encodeURIComponent(arg2)}?username=${this.sosacUser
                 }&password=${hash}`;
 
         } else if (stream === "into-queue") {
@@ -367,8 +375,7 @@ export default class SosacApi {
                 url =
                     `${this.SOSAC_API}episodes/lists/${encodeURIComponent(
                         stream
-                    )}?pocet=100&stranka=${page}&username=${
-                        this.sosacUser
+                    )}?pocet=100&stranka=${page}&username=${this.sosacUser
                     }&password=${hash}`;
             }
 

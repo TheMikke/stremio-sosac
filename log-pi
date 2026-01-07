@@ -1,5 +1,0 @@
-Nov 20 16:06:52 raspberrypi node[34974]: Volání API na URL: https://kodi-api.sosac.to/serials/29?username=Mikke14&password=cc4e3a3ccd65fe72eb4ed0461450df4e
-Nov 20 16:06:53 raspberrypi node[34974]: Meta error: ReferenceError: name is not defined
-Nov 20 16:06:53 raspberrypi node[34974]:     at handleMeta (file:///home/mikke/stremio-sosac/routes/meta.js:290:17)
-Nov 20 16:06:53 raspberrypi node[34974]:     at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
-

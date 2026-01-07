@@ -1,26 +1,28 @@
 {
-    "name": "stremio-sosac-addon",
-    "version": "1.0.0",
-    "description": "Stremio addon pro Sosac + StreamujTV, běžící na Raspberry Pi.",
-    "main": "server.js",
-    "type": "module",
-    "scripts": {
-      "start": "node server.js",
-      "dev": "NODE_ENV=development node server.js"
-    },
-    "keywords": [
-      "stremio",
-      "addon",
-      "sosac",
-      "streamuj",
-      "raspberry-pi"
-    ],
-    "author": "",
-    "license": "MIT",
-    "engines": {
-      "node": ">=18.0.0"
-    },
-    "dependencies": {},
-    "devDependencies": {}
+  "name": "stremio-sosac-addon",
+  "version": "1.0.4",
+  "description": "Stremio addon pro Sosac + StreamujTV (self-hosted).",
+  "main": "server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "keywords": [
+    "stremio",
+    "addon",
+    "sosac",
+    "streamuj",
+    "self-hosted",
+    "raspberry-pi"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "nodemon": "^3.1.9"
   }
-  
+}
+

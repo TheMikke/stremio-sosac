@@ -1,19 +1,17 @@
 {
   "id": "com.sosac.stremio",
-  "version": "1.0.3",
-  "name": "Sosáč + StreamujTV (Raspberry)",
-  "description": "Neoficiální Stremio doplněk umožňující přístup k filmům a seriálům z API Sosáče a StreamujTV. Běží na tvém Raspberry Pi přes Tailscale Funnel.",
-
-  "logo": "https://raspberrypi.napoleon-degree.ts.net/icon.png",
-  "background": "https://raspberrypi.napoleon-degree.ts.net/fanart.png",
-
+  "version": "1.0.7",
+  "name": "Sosáč | StreamujTV",
+  "description": "Stremio doplněk na filmy a seriály ze Sosáče/StreamujTV.",
+  "logo": "https://addons.protozeproto.cz/stremio/icon.png",
+  "background": "https://addons.protozeproto.cz/stremio/fanart.png",
   "contactEmail": "none",
-
+  
   "catalogs": [
     {
       "type": "movie",
       "id": "sosac-movies",
-      "name": "Sosáč – Filmy",
+      "name": "Filmy Sosáč",
       "extra": [
         { "name": "search", "isRequired": false },
         { "name": "skip",   "isRequired": false }
@@ -22,7 +20,7 @@
     {
       "type": "series",
       "id": "sosac-series",
-      "name": "Sosáč – Seriály",
+      "name": "Seriály - Sosáč",
       "extra": [
         { "name": "search", "isRequired": false },
         { "name": "skip",   "isRequired": false }
@@ -30,25 +28,19 @@
     }
   ],
 
-  "resources": [
+ "resources": [
     "catalog",
-    "meta",
-    "stream"
+    {
+      "name": "stream",
+      "types": ["movie", "series"],
+      "idPrefixes": ["tt", "sosac-"]
+    }
   ],
 
-  "types": [
-    "movie",
-    "series"
-  ],
-
-  "idPrefixes": [
-    "sosac-movie-",
-    "sosac-series-",
-    "sosac-episode-"
-  ],
-
+  "types": ["movie", "series"],
+  "idPrefixes": ["tt", "sosac-movie-", "sosac-series-", "sosac-episode-"],
   "behaviorHints": {
     "configurable": true,
-    "configurationRequired": false
+    "configurationRequired": true
   }
 }
